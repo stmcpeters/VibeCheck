@@ -35,6 +35,19 @@ def get_users():
         'users': users
     }
 
+# route to test the mood logs table connection
+@app.route('/mood_logs')
+def get_mood_logs():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM mood_logs;')
+    mood_logs = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return {
+        'mood_logs': mood_logs
+    }
+
 
 # enables cross-origin requests for all routes
 cors = CORS(app, origins='*')
