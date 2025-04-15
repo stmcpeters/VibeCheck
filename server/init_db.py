@@ -48,6 +48,18 @@ try:
                   )
     print("Mood logs table created successfully.")
 
+    print('Creating webscraped articles table...')
+    # drops the articles table if it exists
+    cursor.execute('DROP TABLE IF EXISTS articles;')
+    cursor.execute('CREATE TABLE articles (id SERIAL PRIMARY KEY,'
+                    'title VARCHAR(255) NOT NULL,'
+                    'content TEXT NOT NULL,'
+                    'url VARCHAR(255) NOT NULL,'
+                    'read_time VARCHAR(255) NOT NULL);'
+                    )
+    print("Articles table created successfully.") 
+  
+
     # insert data into the users table
     print("Inserting data into the users table...")
     cursor.execute("INSERT INTO users (email, password)"
@@ -62,6 +74,15 @@ try:
                     'VALUES (%s, %s, %s, %s)',
                     (1, ':smile:', 'today was a good day! i had a lot of fun building this app!', 0.8))
     print('Data inserted into mood logs successfully.')
+
+    # insert data into the articles table
+    print('Inserting data into the articles table...')
+    cursor.execute('INSERT INTO articles (title, content, url, read_time)'
+                    'VALUES (%s, %s, %s, %s)',
+                    ('Test Article',
+                    'This is only a test article. It is not real.',
+                    'http://test.com/',
+                    '12 min read'))
 
     # commits the changes to the database
     connection.commit()
