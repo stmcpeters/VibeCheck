@@ -25,7 +25,27 @@ Many people struggle to track their moods consistently, which prevents them from
 - CSS Framework: Tailwind
 
 ### Installation Instructions
-    - [Steps to clone and run project on another local machine.]
+Prerequisite: Python 3.13.1
+1. Clone the repository <br>
+`git clone https://github.com/stmcpeters/VibeCheck.git` <br>
+`cd vibecheck`
+2. Set up the Flask backend
+    - Create and activate a virtual environment <br>
+`python3 -m venv venv` <br>
+`source venv/bin/activate` # On Windows: venv\Scripts\activate
+    - Install dependencies <br>
+`pip install -r requirements.txt`
+    - Add environment variables for database <br>
+    Create a `.env` file inside the `server` folder with: <br>
+`DB_USERNAME='<username>'` <br>
+`DB_PASSWORD='<password>'`
+    - Run the Flask server <br>
+`python3 app.py`
+3. Set up the React Frontend <br>
+`cd client` <br>
+`npm install` <br>
+`npm run dev`
+
 ### Stretch Goals/Help Wanted
 - Daily mood streak tracker
 - Notification reminder to log mood
