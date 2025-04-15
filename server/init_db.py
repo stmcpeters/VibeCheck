@@ -18,34 +18,54 @@ try:
       user=os.environ['DB_USERNAME'],
       password=os.environ['DB_PASSWORD'],
       port="5432")
-
   print("Connected to the database.")
+
   # creates a cursor object to interact with the database
   cursor = connection.cursor()
 
-  print("Creating the users table...")
+  # execute SQL commands
   try:
+    print("Creating the users table...")
     # drops the users table if it exists
-    cursor.execute('DROP TABLE IF EXISTS users;')
+    cursor.execute('DROP TABLE IF EXISTS users CASCADE;')
     cursor.execute('CREATE TABLE users (id SERIAL PRIMARY KEY,'
                     'email VARCHAR(255) NOT NULL,' 
                     'password VARCHAR(255) NOT NULL,'
-                    'OAuth_id VARCHAR(255),'
+                    'OAuth_id VARCHAR(255) DEFAULT NULL,'
                     'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);'
                     )
     print("Users table created successfully.")
 
-    print("Inserting data into the users table...")
+    print('Creating mood logs table...')
+    # drops the mood logs table if it exists
+    cursor.execute('DROP TABLE IF EXISTS mood_logs;')
+    cursor.execute('CREATE TABLE mood_logs (id SERIAL PRIMARY KEY,'
+                    'user_id INTEGER REFERENCES users(id),'
+                    'emoji VARCHAR(255) NOT NULL,'
+                    'journal_entry TEXT DEFAULT NULL,'
+                    'sentiment_score FLOAT DEFAULT NULL,'
+                    'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);'
+                  )
+    print("Mood logs table created successfully.")
+
     # insert data into the users table
+    print("Inserting data into the users table...")
     cursor.execute("INSERT INTO users (email, password)"
                     "VALUES (%s, %s)",
                     ('test@test.com',
                     'password123'))
     print("Data inserted into users table successfully.")
 
+    # insert data into the mood logs table
+    print('Inserting data into the mood logs table...')
+    cursor.execute('INSERT INTO mood_logs (user_id, emoji, journal_entry, sentiment_score)'
+                    'VALUES (%s, %s, %s, %s)',
+                    (1, ':smile:', 'today was a good day! i had a lot of fun building this app!', 0.8))
+    print('Data inserted into mood logs successfully.')
+
     # commits the changes to the database
     connection.commit()
-    print("Changes committed to the database.")
+    print("Changes committed to the vibe_check database.")
 
   except Exception as e:
       print(f"Error executing SQL commands: {e}")
