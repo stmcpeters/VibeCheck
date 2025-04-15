@@ -1,0 +1,1 @@
+// Navigation bar with links to Dashboard, Journal, Articles, Login/Logout

@@ -1,0 +1,1 @@
+// Handles unexpected errors in UI rendering
