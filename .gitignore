@@ -25,3 +25,6 @@ dist-ssr
 
 # virtual environment
 venv/
+
+# database info
+.env
