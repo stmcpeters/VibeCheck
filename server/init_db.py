@@ -88,10 +88,29 @@ try:
     connection.commit()
     print("Changes committed to the vibe_check database.")
 
+  # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+  except psycopg2.OperationalError as e:
+    print(f'Operational error: {e}')
+    # rolls back the interaction in case of an error
+    connection.rollback()
+  
+  # error handling for SQL synttax errors, invalid table/columns, incorrect data types, etc
+  except psycopg2.ProgrammingError as e:
+    print(f'Programming error: {e}')
+    # rolls back the interaction in case of an error
+    connection.rollback()
+
+  # error handling for constraints violations
+  except psycopg2.IntegrityError as e:
+    print(f'Integrity error: {e}')
+    # rolls back the interaction in case of an error
+    connection.rollback()
+  
+  # error handling for any other possible errors
   except Exception as e:
-      print(f"Error executing SQL commands: {e}")
-      # rolls back the interaction in case of an error
-      connection.rollback()
+    print(f"Error executing SQL commands: {e}")
+    # rolls back the interaction in case of an error
+    connection.rollback()
 
   finally:
     #  closes the cursor
