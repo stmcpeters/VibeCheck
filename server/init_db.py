@@ -94,7 +94,7 @@ try:
     # rolls back the interaction in case of an error
     connection.rollback()
   
-  # error handling for SQL synttax errors, invalid table/columns, incorrect data types, etc
+  # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
   except psycopg2.ProgrammingError as e:
     print(f'Programming error: {e}')
     # rolls back the interaction in case of an error
