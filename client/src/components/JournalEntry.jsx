@@ -1,0 +1,1 @@
+// Individual mood entry showing emoji, journal, sentiment score, and edit/delete buttons

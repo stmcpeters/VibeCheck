@@ -1,0 +1,1 @@
+// Emoji selection, journal textarea, AI-generated prompt (uses OpenAI), and submit button
