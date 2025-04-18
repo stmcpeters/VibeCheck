@@ -47,10 +47,10 @@ def get_users():
         return jsonify({'users': users}), 200
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
-        return jsonify({'error: Failed to fetch users'}), 500
+        return jsonify({'error': 'Failed to fetch users'}), 500
     # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
     except psycopg2.OperationalError:
-        return jsonify({'error: Database connection failed'}), 500
+        return jsonify({'error': 'Database connection failed'}), 500
     # will catch any other errors
     except Exception as e:
         print(f'Error fetching users from the database: {e}')
@@ -77,10 +77,10 @@ def get_emojis():
         return jsonify({'emojis': emojis}), 200
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
-        return jsonify({'error: Failed to fetch emojis'}), 500
+        return jsonify({'error': 'Failed to fetch emojis'}), 500
     # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
     except psycopg2.OperationalError:
-        return jsonify({'error: Database connection failed'}), 500
+        return jsonify({'error': 'Database connection failed'}), 500
     # will catch any other errors
     except Exception as e:
         print(f'Error fetching emojis from the database: {e}')
@@ -108,10 +108,10 @@ def get_mood_logs():
         return jsonify({'mood_logs': mood_logs}), 200
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
-        return jsonify({'error: Failed to fetch mood logs'}), 500
+        return jsonify({'error': 'Failed to fetch mood logs'}), 500
     # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
     except psycopg2.OperationalError:
-        return jsonify({'error: Database connection failed'}), 500
+        return jsonify({'error': 'Database connection failed'}), 500
     except Exception as e:
         print(f'Unexpected error: {e}')
         return jsonify({'error': 'An unexpected error occurred'}), 500
@@ -139,10 +139,10 @@ def get_articles():
         return jsonify({'articles': articles}), 200
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
-        return jsonify({'error: Failed to fetch articles'}), 500
+        return jsonify({'error': 'Failed to fetch articles'}), 500
     # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
     except psycopg2.OperationalError:
-        return jsonify({'error: Database connection failed'}), 500
+        return jsonify({'error': 'Database connection failed'}), 500
     except Exception as e:
         print(f'Unexpected error: {e}')
         return jsonify({'error': 'An unexpected error occurred'}), 500
