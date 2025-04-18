@@ -36,12 +36,21 @@ try:
                     )
     print("Users table created successfully.")
 
+    print('Creating emojis table...')
+    # drops the emojis table if it exists
+    cursor.execute('DROP TABLE IF EXISTS emojis;')
+    cursor.execute('CREATE TABLE emojis (id SERIAL PRIMARY KEY,'
+                    'emoji VARCHAR(255) NOT NULL,'
+                    'label TEXT NOT NULL);'
+                    )
+    print("Emoji table created successfully.") 
+
     print('Creating mood logs table...')
     # drops the mood logs table if it exists
     cursor.execute('DROP TABLE IF EXISTS mood_logs;')
     cursor.execute('CREATE TABLE mood_logs (id SERIAL PRIMARY KEY,'
                     'user_id INTEGER REFERENCES users(id),'
-                    'emoji VARCHAR(255) NOT NULL,'
+                    'emoji_id INTEGER NOT NULL REFERENCES emojis(id),'
                     'journal_entry TEXT DEFAULT NULL,'
                     'sentiment_score FLOAT DEFAULT NULL,'
                     'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);'
@@ -58,7 +67,6 @@ try:
                     'read_time VARCHAR(255) NOT NULL);'
                     )
     print("Articles table created successfully.") 
-  
 
     # insert data into the users table
     print("Inserting data into the users table...")
@@ -68,11 +76,19 @@ try:
                     'password123'))
     print("Data inserted into users table successfully.")
 
+    # insert data into the emojis table
+    print("Inserting data into the emojis table...")
+    emojis = [('😀', 'happy'),('😐', 'neutral'),('☹️', 'unhappy')]
+    cursor.executemany("INSERT INTO emojis (emoji, label)"
+                    "VALUES (%s, %s)",
+                    emojis)
+    print("Data inserted into emojis table successfully.")
+
     # insert data into the mood logs table
     print('Inserting data into the mood logs table...')
-    cursor.execute('INSERT INTO mood_logs (user_id, emoji, journal_entry, sentiment_score)'
+    cursor.execute('INSERT INTO mood_logs (user_id, emoji_id, journal_entry, sentiment_score)'
                     'VALUES (%s, %s, %s, %s)',
-                    (1, ':smile:', 'today was a good day! i had a lot of fun building this app!', 0.8))
+                    (1, 1, 'today was a good day! i had a lot of fun building this app!', 0.8))
     print('Data inserted into mood logs successfully.')
 
     # insert data into the articles table
