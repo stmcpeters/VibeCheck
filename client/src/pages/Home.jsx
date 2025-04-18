@@ -1,3 +1,7 @@
+import NavBar from "../components/NavBar"
+import Footer from "../components/Footer"
+
+
 export default function Home() {
   return (
     <>
@@ -11,9 +15,9 @@ export default function Home() {
           <div className="hero-content text-neutral-content text-center">
             <div className="max-w-md">
               <h1 className="mb-5 text-5xl font-bold">Welcome to VibeCheck!</h1>
-              <p className="mb-5">
+              {/* <p className="mb-5">
               {response}
-              </p>
+              </p> */}
               <button className="btn btn-primary">Login/Sign up</button>
             </div>
           </div>
