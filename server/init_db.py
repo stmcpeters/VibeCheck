@@ -8,6 +8,8 @@ load_dotenv()
 
 # initializes the connection variable
 connection = None
+# initializes the cursor variable
+cursor = None
 
 try:
   print("Connecting to the database...")
@@ -129,8 +131,9 @@ try:
     connection.rollback()
 
   finally:
-    #  closes the cursor
-    cursor.close()
+    if cursor:
+      #  closes the cursor
+      cursor.close()
 
 except Exception as e:
   print(f"Error connecting to the database: {e}")
