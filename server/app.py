@@ -1,6 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
-
 import os
 import psycopg2
 # loads environment variables from a .env file
@@ -8,68 +7,127 @@ from dotenv import load_dotenv
 
 # creates Flask app instance
 app = Flask(__name__)
+# enables cross-origin requests for all routes
+cors = CORS(app, origins='*')
 
 # creates a connection to the PostgreSQL database
 # using environment variables for credentials
 def get_db_connection():
-    # loads environment variables from .env file
-    load_dotenv()
-    connection = psycopg2.connect(
-        host="localhost",
-        database="vibe_check",
-        user=os.environ['DB_USERNAME'],
-        password=os.environ['DB_PASSWORD'],
-        port="5432")
-    return connection
+    try:
+        # loads environment variables from .env file
+        load_dotenv()
+        connection = psycopg2.connect(
+            host="localhost",
+            database="vibe_check",
+            user=os.environ['DB_USERNAME'],
+            password=os.environ['DB_PASSWORD'],
+            port="5432")
+        return connection
+    # error handling for connection failure, invalid DB credentials, etc
+    except psycopg2.OperationalError as e:
+        print(f'Database connection error: {e}')
+        raise
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error connecting to the database: {e}')
+        raise
 
-# route to test the users table connection
-@app.route('/users')
+# fetches all users from users table
+@app.route('/users', methods=['GET'])
 def get_users():
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    cursor.execute('SELECT * FROM users;')
-    users = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return {
-        'users': users
-    }
+    connection = None
+    cursor = None
 
-# route to test the mood logs table connection
-@app.route('/mood_logs')
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM users;')
+        users = cursor.fetchall()
+        # will return users data and a 200 status code (successful)
+        return jsonify({'users': users}), 200
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error: Failed to fetch users'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error: Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching users from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+            
+# fetches all mood logs from mood_logs table
+@app.route('/mood_logs', methods=['GET'])
 def get_mood_logs():
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    cursor.execute('SELECT * FROM mood_logs;')
-    mood_logs = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return {
-        'mood_logs': mood_logs
-    }
+    connection = None
+    cursor = None
 
-# route to test the articles table connection
-@app.route('/articles')
+    try: 
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM mood_logs;')
+        mood_logs = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return jsonify({'mood_logs': mood_logs}), 200
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error: Failed to fetch mood logs'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error: Database connection failed'}), 500
+    except Exception as e:
+        print(f'Unexpected error: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+            
+
+# fetches all articles from articles table
+@app.route('/articles', methods=['GET'])
 def get_articles():
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    cursor.execute('SELECT * FROM articles;')
-    articles = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return {
-        'articles': articles
-    }
+    connection = None
+    cursor = None
 
-# enables cross-origin requests for all routes
-cors = CORS(app, origins='*')
+    try: 
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM articles;')
+        articles = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return jsonify({'articles': articles}), 200
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error: Failed to fetch articles'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error: Database connection failed'}), 500
+    except Exception as e:
+        print(f'Unexpected error: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+            
 
-# creates a route for the root URL
+# route for the root URL
 @app.route('/')
 def index():
-    return {
-        'message': 'this is a message from the Flask backend!'
-    }
+    return jsonify({'message': 'this is a message from the Flask backend!'}), 200
 
 
 if __name__ == '__main__':
