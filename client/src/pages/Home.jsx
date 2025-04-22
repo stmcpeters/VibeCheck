@@ -1,4 +1,4 @@
-import NavBar from "../components/NavBar"
+// serves as the main page before a user signs in
 import Footer from "../components/Footer"
 
 
