@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard'
 import UserAuth from './pages/UserAuth'  
 import ErrorPage from './pages/ErrorPage'
 import ArticlesList from './pages/ArticlesList'
-import EntriesList from './pages/EntriesList'
+import LogsList from './pages/LogsList'
 import LogOut from './pages/LogOut'
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
           <Route path="/auth" element={<UserAuth />} />
           <Route path="/*" element={<ErrorPage />} />
           <Route path='/articles' element={<ArticlesList />} />
-          <Route path='/logs' element={<EntriesList />} />
+          <Route path='/logs' element={<LogsList />} />
           <Route path='/logout' element={<LogOut />} />
         </Routes>
       </BrowserRouter>
