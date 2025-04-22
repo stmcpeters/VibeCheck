@@ -27,13 +27,13 @@ function NavBar() {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a>Dashboard</a>
+                <a href='/dashboard'>Dashboard</a>
               </li>
               <li>
-                <a>Mood Logs</a>
+                <a href='/logs'>Mood Logs</a>
               </li>
               <li>
-                <a>Articles</a>
+                <a href='/articles'>Articles</a>
               </li>
             </ul>
           </div>
