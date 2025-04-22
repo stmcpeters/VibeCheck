@@ -66,6 +66,21 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+
+.heading {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* .side-by-side {
+  display: inline-flex;
+} */
+
+/* .half {
+  max-width: 50%;
+} */
+
+
 @import "tailwindcss";
 @plugin "daisyui"{
   themes: light  --prefersdark, dark, pastel --default;
