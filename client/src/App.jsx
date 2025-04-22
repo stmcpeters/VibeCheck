@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard'
 import UserAuth from './pages/UserAuth'  
 import ErrorPage from './pages/ErrorPage'
 import ArticlesList from './pages/ArticlesList'
-
+import EntriesList from './pages/EntriesList'
 
 
 function App() {
@@ -38,6 +38,7 @@ function App() {
           <Route path="/auth" element={<UserAuth />} />
           <Route path="/*" element={<ErrorPage />} />
           <Route path='/articles' element={<ArticlesList />} />
+          <Route path='/logs' element={<EntriesList />} />
         </Routes>
       </BrowserRouter>
     </>
