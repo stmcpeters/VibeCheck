@@ -2,7 +2,7 @@
 import React from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
-import Articles from '../components/Articles'
+import Articles from '../components/ArticleItem'
 
 export default function ArticlesList() {
   return (

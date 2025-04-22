@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard'
 import UserAuth from './pages/UserAuth'  
 import ErrorPage from './pages/ErrorPage'
 import ArticlesList from './pages/ArticlesList'
-import LogsList from './pages/LogsList'
+import MoodLogsList from './pages/MoodLogsList'
 import LogOut from './pages/LogOut'
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
           <Route path="/auth" element={<UserAuth />} />
           <Route path="/*" element={<ErrorPage />} />
           <Route path='/articles' element={<ArticlesList />} />
-          <Route path='/logs' element={<LogsList />} />
+          <Route path='/logs' element={<MoodLogsList />} />
           <Route path='/logout' element={<LogOut />} />
         </Routes>
       </BrowserRouter>

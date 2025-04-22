@@ -2,15 +2,15 @@
 import React from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
-import LogEntry from '../components/LogEntry'
+import MoodLogItem from '../components/MoodLogItem'
 
-export default function LogsList() {
+export default function MoodLogsList() {
   return (
     <>
       <NavBar />
       <div className='place-items-center'>
         <div className='grow text-2xl'>List of Mood Logs</div>
-        <LogEntry />
+        <MoodLogItem />
         {/* pagination */}
         <div className="join">
           <button className="join-item btn btn-disabled">«</button>

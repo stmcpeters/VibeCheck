@@ -4,8 +4,8 @@ import Footer from "../components/Footer"
 import MoodForm from "../components/MoodForm"
 import SearchBar from "../components/SearchBar"
 import Chart from "../components/Chart"
-import Articles from "../components/Articles"
-import LogEntry from "../components/LogEntry"
+import Articles from "../components/ArticleItem"
+import MoodLogItem from "../components/MoodLogItem"
 
 export default function Dashboard() {
   return (
@@ -33,7 +33,7 @@ export default function Dashboard() {
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Recent Mood Logs</h1>
-          <LogEntry />
+          <MoodLogItem />
         </div>
       </div>
       <Footer />
