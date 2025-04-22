@@ -9,20 +9,20 @@ export default function LogEntry() {
       {/* head */}
       <thead>
         <tr>
-          <th></th>
-          <th>Article Title</th>
-          <th>Summary</th>
-          <th>Readtime</th>
+          <th>Created At</th>
+          <th>Emoji</th>
+          <th>Entry</th>
+          <th>Sentiment Score</th>
           <th colSpan={2}>Actions</th>
         </tr>
       </thead>
       <tbody>
         {/* row 1 */}
         <tr className="hover:bg-base-300">
-          <th>1</th>
-          <td>Cy Ganderton</td>
-          <td>Quality Control Specialist</td>
-          <td>Blue</td>
+          <th>7/31/2053</th>
+          <td>😀</td>
+          <td>Sheep became continued topic rough within tired thin settlers single morning running teeth plastic life apart union result history movement tin by noted rubbed</td>
+          <td>0.8</td>
           <td className='pr-5 pl-5'>
             <button className="btn btn-square">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>
