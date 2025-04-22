@@ -17,7 +17,7 @@ export default function Home() {
               {/* <p className="mb-5">
               {response}
               </p> */}
-              <button className="btn btn-primary">Login/Sign up</button>
+              <button className="btn btn-primary"><a href="/auth">Login/Sign up</a></button>
             </div>
           </div>
         </div>
