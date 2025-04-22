@@ -40,7 +40,7 @@ try:
 
     print('Creating emojis table...')
     # drops the emojis table if it exists
-    cursor.execute('DROP TABLE IF EXISTS emojis;')
+    cursor.execute('DROP TABLE IF EXISTS emojis CASCADE;')
     cursor.execute('CREATE TABLE emojis (id SERIAL PRIMARY KEY,'
                     'emoji VARCHAR(255) NOT NULL,'
                     'label TEXT NOT NULL);'
