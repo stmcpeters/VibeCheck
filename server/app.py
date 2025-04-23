@@ -108,6 +108,50 @@ def add_user():
         if cursor:
             cursor.close()
 
+# updates a user's info
+@app.route('/user/<int:id>', methods=['PUT'])
+def update_user(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'PUT':
+
+            # parse the JSON data
+            data = request.get_json()
+            new_email = data.get('email')
+            new_password = data.get('password')
+            
+            # validate input
+            if not new_email or not new_password:
+                return jsonify({"error": "Email and password are required"}), 500
+            
+            # connect to databaase
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to insert new user
+            cursor.execute('''UPDATE users SET email = %s, password = %s WHERE id = %s''', (new_email, new_password, id))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'User has been updated!'}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to update user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error updating user in the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
 ##################### end of users ##################################
 
 # fetches all emojis from emojis table
