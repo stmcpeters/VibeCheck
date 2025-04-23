@@ -188,6 +188,53 @@ def get_article(id):
         if cursor:
             cursor.close()
 
+# post new article
+@app.route('/add_article', methods=['POST'])
+def add_article():
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'POST':
+
+            # parse the JSON data
+            data = request.get_json()
+            title = data.get('title')
+            url = data.get('url')
+            content = data.get('content')
+            read_time = data.get('read_time')
+
+            # validate input
+            if not title or not content or not url or not read_time:
+                return jsonify({"error": "Missing required fields"}), 400
+
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to add a new article
+            cursor.execute('''INSERT INTO articles
+                            (title, url, content, read_time) VALUES (%s, %s, %s, %s)''', (title, url, content, read_time))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'New article has been created!'}), 201
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to create new article'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error adding article to the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
 # route for the root URL
 @app.route('/')
 def index():
