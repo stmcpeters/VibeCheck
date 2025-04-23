@@ -152,6 +152,41 @@ def update_user(id):
         if cursor:
             cursor.close()
 
+# delete a user
+@app.route('/delete/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'DELETE':
+
+            # connect to databaase
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to delete user
+            cursor.execute('''DELETE FROM users WHERE id = %s''', (id,))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'User has been deleted!'}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to delete user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error deleting user from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
 ##################### end of users ##################################
 
 # fetches all emojis from emojis table
