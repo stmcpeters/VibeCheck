@@ -117,7 +117,7 @@ def get_user(id):
     try:
         if request.method == 'GET':
 
-            # connect to databaase
+            # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
             # query to select user by id
@@ -160,7 +160,7 @@ def update_user(id):
             if not new_email or not new_password:
                 return jsonify({"error": "Email and password are required"}), 500
             
-            # connect to databaase
+            # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
             # query to insert new user
@@ -195,7 +195,7 @@ def delete_user(id):
     try:
         if request.method == 'DELETE':
 
-            # connect to databaase
+            # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
             # query to delete user
