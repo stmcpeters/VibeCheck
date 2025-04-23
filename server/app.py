@@ -163,7 +163,7 @@ def update_user(id):
             # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
-            # query to insert new user
+            # query to update an existing user
             cursor.execute('''UPDATE users SET email = %s, password = %s WHERE id = %s''', (new_email, new_password, id))
             # commit changes
             connection.commit()
