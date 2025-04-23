@@ -35,7 +35,7 @@ def get_db_connection():
 ####################### USERS #################################
 
 # fetches all users from users table
-@app.route('/users', methods=['GET'])
+@app.route('/get_users', methods=['GET'])
 def get_users():
     connection = None
     cursor = None
@@ -65,7 +65,7 @@ def get_users():
             cursor.close()
 
 # creates a new user 
-@app.route('/add', methods=['POST'])
+@app.route('/add_user', methods=['POST'])
 def add_user():
     connection = None
     cursor = None
@@ -109,7 +109,7 @@ def add_user():
             cursor.close()
 
 # fetches a user by ID
-@app.route('/user/<int:id>', methods=['GET'])
+@app.route('/get_user/<int:id>', methods=['GET'])
 def get_user(id):
     connection = None
     cursor = None
@@ -143,7 +143,7 @@ def get_user(id):
             cursor.close()
 
 # updates a user's info
-@app.route('/update/<int:id>', methods=['PUT'])
+@app.route('/update_user/<int:id>', methods=['PUT'])
 def update_user(id):
     connection = None
     cursor = None
@@ -187,7 +187,7 @@ def update_user(id):
             cursor.close()
 
 # delete a user
-@app.route('/delete/<int:id>', methods=['DELETE'])
+@app.route('/delete_user/<int:id>', methods=['DELETE'])
 def delete_user(id):
     connection = None
     cursor = None
