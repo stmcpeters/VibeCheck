@@ -82,7 +82,7 @@ def add_user():
             if not email or not password:
                 return jsonify({"error": "Missing required fields"}), 400
             
-            # connect to databaase
+            # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
             # query to insert new user
