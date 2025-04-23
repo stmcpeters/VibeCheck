@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import psycopg2
@@ -62,8 +62,10 @@ def get_users():
         if cursor:
             cursor.close()
             
-# fetches all emojis from emojis table
-@app.route('/emojis', methods=['GET'])
+###################### emojis ##########################
+
+# gets all emojis from emojis table
+@app.route('/get_emojis', methods=['GET'])
 def get_emojis():
     connection = None
     cursor = None
@@ -91,6 +93,42 @@ def get_emojis():
             connection.close()
         if cursor:
             cursor.close()
+
+# get emoji by emoji ID
+@app.route('/fetch_emoji/<id>', methods=['GET'])
+def get_emoji_by_id(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'GET':
+
+            # connect to databaase
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to select user by id
+            cursor.execute('''SELECT * FROM emojis WHERE id = %s''', (id,))
+            emoji = cursor.fetchone()
+            return jsonify({'emoji': emoji}), 200
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to fetch emoji with that ID}'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching emoji with id {id} from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
+###################### end of emojis ##########################
 
 # fetches all mood logs from mood_logs table
 @app.route('/mood_logs', methods=['GET'])
