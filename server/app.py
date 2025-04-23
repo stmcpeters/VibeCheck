@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import psycopg2
@@ -32,6 +32,8 @@ def get_db_connection():
         print(f'Error connecting to the database: {e}')
         raise
 
+####################### USERS #################################
+
 # fetches all users from users table
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -62,6 +64,52 @@ def get_users():
         if cursor:
             cursor.close()
             
+# creates a new user 
+@app.route('/user', methods=['POST'])
+def add_user():
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'POST':
+
+            # parse the JSON data
+            data = request.get_json()
+            email = data.get('email')
+            password = data.get('password')
+            
+            # validate input
+            if not email or not password:
+                return jsonify({"error": "Missing required fields"}), 400
+            
+            # connect to databaase
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to insert new user
+            cursor.execute('''INSERT INTO users (email, password) VALUES (%s , %s)''', (email, password))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'new user has been created!'}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to create new user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error adding user to the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
+##################### end of users ##################################
+
 # fetches all emojis from emojis table
 @app.route('/emojis', methods=['GET'])
 def get_emojis():
