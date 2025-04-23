@@ -158,7 +158,7 @@ def update_user(id):
             
             # validate input
             if not new_email or not new_password:
-                return jsonify({"error": "Email and password are required"}), 500
+                return jsonify({"error": "Email and password are required"}), 400
             
             # connect to database
             connection = get_db_connection()
