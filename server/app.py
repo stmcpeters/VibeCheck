@@ -63,9 +63,9 @@ def get_users():
             connection.close()
         if cursor:
             cursor.close()
-            
+
 # creates a new user 
-@app.route('/user', methods=['POST'])
+@app.route('/add', methods=['POST'])
 def add_user():
     connection = None
     cursor = None
@@ -108,8 +108,42 @@ def add_user():
         if cursor:
             cursor.close()
 
+# fetches a user by ID
+@app.route('/user/<int:id>', methods=['GET'])
+def get_user(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'GET':
+
+            # connect to databaase
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to select user by id
+            cursor.execute('''SELECT * FROM users WHERE id = %s''', (id,))
+            user = cursor.fetchone()
+            return jsonify({'user': user}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to fetch user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching user from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
 # updates a user's info
-@app.route('/user/<int:id>', methods=['PUT'])
+@app.route('/update/<int:id>', methods=['PUT'])
 def update_user(id):
     connection = None
     cursor = None
