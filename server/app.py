@@ -103,7 +103,7 @@ def get_emoji_by_id(id):
     try:
         if request.method == 'GET':
 
-            # connect to databaase
+            # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
             # query to select user by id
