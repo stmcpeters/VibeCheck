@@ -281,6 +281,43 @@ def update_article(id):
         if cursor:
             cursor.close()
 
+# delete article by id
+@app.route('/delete_article/<int:id>', methods=['DELETE'])
+def delete_article(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'DELETE':
+
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to delete article
+            cursor.execute('''DELETE FROM articles WHERE id = %s''', (id,))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'Article has been deleted!'}), 200
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to delete article'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error deleting article from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+            
+########################### end of articles ############################
+
 # route for the root URL
 @app.route('/')
 def index():
