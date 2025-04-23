@@ -235,6 +235,52 @@ def add_article():
         if cursor:
             cursor.close()
 
+# update article by id
+@app.route('/update_article/<int:id>', methods=['PUT'])
+def update_article(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'PUT':
+
+            # parse the JSON data
+            data = request.get_json()
+            new_title = data.get('title')
+            new_url = data.get('url')
+            new_content = data.get('content')
+            new_read_time = data.get('read_time')
+
+            # validate input
+            if not new_title or not new_content or not new_url or not new_read_time:
+                return jsonify({"error": "Missing required fields"}), 400
+
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to update an existing article
+            cursor.execute('''UPDATE articles SET title = %s, url = %s, content = %s, read_time = %s WHERE id = %s''', (new_title, new_url, new_content, new_read_time, id))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'Article has been updated!'}), 200
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to update article'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error updating article in the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
 # route for the root URL
 @app.route('/')
 def index():
