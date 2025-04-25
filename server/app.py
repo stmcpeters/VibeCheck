@@ -273,7 +273,7 @@ def delete_mood_log(id):
             # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
-            # query to delete user
+            # query to delete mood log
             cursor.execute('''DELETE FROM mood_logs WHERE id = %s''', (id,))
             # commit changes
             connection.commit()
