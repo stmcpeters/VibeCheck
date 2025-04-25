@@ -210,7 +210,7 @@ def get_mood_log(id):
         if cursor:
             cursor.close()
 
-# update an exising mood log by ID
+# update an existing mood log by ID
 @app.route('/update_mood_log/<int:id>', methods=['PUT'])
 def update_mood_log(id):
     connection = None
