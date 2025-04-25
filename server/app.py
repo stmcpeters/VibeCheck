@@ -177,6 +177,40 @@ def add_mood_log():
         if cursor:
             cursor.close()
 
+# fetches a specific mood log by ID
+@app.route('/get_mood_log/<int:id>', methods=['GET'])
+def get_mood_log(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'GET':
+            # connect to the database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to select the mood log by ID
+            cursor.execute('''SELECT * FROM mood_logs WHERE id = %s;''', (id,))
+            mood_log = cursor.fetchone()
+            return jsonify({"mood_log": mood_log}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to fetch mood log'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching mood log from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
+
 ##################### end of mood logs #############################
 
 # fetches all articles from articles table
