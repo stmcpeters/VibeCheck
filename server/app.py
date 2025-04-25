@@ -210,6 +210,50 @@ def get_mood_log(id):
         if cursor:
             cursor.close()
 
+# update an exising mood log by ID
+@app.route('/update_mood_log/<int:id>', methods=['PUT'])
+def update_mood_log(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'PUT':
+
+            # parse the JSON data
+            data = request.get_json()
+            new_emoji_id = data.get('emoji_id')
+            new_journal_entry = data.get('journal_entry', None)
+
+            # validate input
+            if not new_emoji_id or not new_journal_entry:
+                return jsonify({"error": "Missing fields are required"}), 400
+
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to update an existing mood log
+            cursor.execute('''UPDATE mood_logs SET emoji_id = %s, journal_entry = %s WHERE id = %s''', (new_emoji_id, new_journal_entry, id))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'Mood log has been updated!'}), 200
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to update mood log'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error updating mood log in the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
 
 ##################### end of mood logs #############################
 
