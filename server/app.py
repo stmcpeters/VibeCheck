@@ -225,14 +225,21 @@ def update_mood_log(id):
             new_journal_entry = data.get('journal_entry', None)
 
             # validate input
-            if not new_emoji_id or not new_journal_entry:
-                return jsonify({"error": "Missing fields are required"}), 400
+            if not new_emoji_id:
+                return jsonify({"error": "emoji_id is required"}), 400
 
             # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
+
             # query to update an existing mood log
-            cursor.execute('''UPDATE mood_logs SET emoji_id = %s, journal_entry = %s WHERE id = %s''', (new_emoji_id, new_journal_entry, id))
+            # handles adding a journal entry to an existing mood log
+            if new_journal_entry is not None:
+                cursor.execute('''UPDATE mood_logs SET emoji_id = %s, journal_entry = %s WHERE id = %s''', (new_emoji_id, new_journal_entry, id))
+            # updates the emoji associated with the mood log only
+            else:
+                cursor.execute('''UPDATE mood_logs SET emoji_id = %s WHERE id = %s''', (new_emoji_id, id))
+
             # commit changes
             connection.commit()
             return jsonify({'message': 'Mood log has been updated!'}), 200
