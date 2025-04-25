@@ -35,7 +35,7 @@ def get_db_connection():
 ####################### USERS #################################
 
 # fetches all users from users table
-@app.route('/get_users', methods=['GET'])
+@app.route('/users', methods=['GET'])
 def get_users():
     connection = None
     cursor = None
