@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import psycopg2
@@ -32,6 +32,8 @@ def get_db_connection():
         print(f'Error connecting to the database: {e}')
         raise
 
+####################### USERS #################################
+
 # fetches all users from users table
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -61,7 +63,166 @@ def get_users():
             connection.close()
         if cursor:
             cursor.close()
+
+# creates a new user 
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'POST':
+
+            # parse the JSON data
+            data = request.get_json()
+            email = data.get('email')
+            password = data.get('password')
             
+            # validate input
+            if not email or not password:
+                return jsonify({"error": "Missing required fields"}), 400
+            
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to insert new user
+            cursor.execute('''INSERT INTO users (email, password) VALUES (%s , %s)''', (email, password))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'new user has been created!'}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to create new user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error adding user to the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
+# fetches a user by ID
+@app.route('/get_user/<int:id>', methods=['GET'])
+def get_user(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'GET':
+
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to select user by id
+            cursor.execute('''SELECT * FROM users WHERE id = %s''', (id,))
+            user = cursor.fetchone()
+            return jsonify({'user': user}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to fetch user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching user from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
+# updates a user's info
+@app.route('/update_user/<int:id>', methods=['PUT'])
+def update_user(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'PUT':
+
+            # parse the JSON data
+            data = request.get_json()
+            new_email = data.get('email')
+            new_password = data.get('password')
+            
+            # validate input
+            if not new_email or not new_password:
+                return jsonify({"error": "Email and password are required"}), 400
+            
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to update an existing user
+            cursor.execute('''UPDATE users SET email = %s, password = %s WHERE id = %s''', (new_email, new_password, id))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'User has been updated!'}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to update user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error updating user in the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
+# delete a user
+@app.route('/delete_user/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'DELETE':
+
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to delete user
+            cursor.execute('''DELETE FROM users WHERE id = %s''', (id,))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': 'User has been deleted!'}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to delete user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error deleting user from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
+
+##################### end of users ##################################
+
 # fetches all emojis from emojis table
 @app.route('/emojis', methods=['GET'])
 def get_emojis():
