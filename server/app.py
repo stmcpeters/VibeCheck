@@ -149,10 +149,10 @@ def get_articles():
         return jsonify({'error': 'An unexpected error occurred'}), 500
     
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # get article by id
 @app.route('/get_article/<int:id>', methods=['GET'])
@@ -183,10 +183,10 @@ def get_article(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # post new article
 @app.route('/add_article', methods=['POST'])
@@ -230,10 +230,10 @@ def add_article():
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # update article by id
 @app.route('/update_article/<int:id>', methods=['PUT'])
@@ -276,10 +276,10 @@ def update_article(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # delete article by id
 @app.route('/delete_article/<int:id>', methods=['DELETE'])
@@ -311,10 +311,10 @@ def delete_article(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
             
 ########################### end of articles ############################
 
