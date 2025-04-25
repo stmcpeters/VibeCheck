@@ -254,6 +254,40 @@ def update_mood_log(id):
         if cursor:
             cursor.close()
 
+# delete a mood log by ID
+@app.route('/delete_mood_log/<int:id>', methods=['DELETE'])
+def delete_mood_log(id):
+    connection = None
+    cursor = None
+
+    try:
+        if request.method == 'DELETE':
+
+            # connect to database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            # query to delete user
+            cursor.execute('''DELETE FROM mood_logs WHERE id = %s''', (id,))
+            # commit changes
+            connection.commit()
+            return jsonify({'message': f'Mood log {id} has been deleted!'}), 200
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': f'Failed to delete mood log {id}'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error deleting mood log {id} from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if connection:
+            connection.close()
+        if cursor:
+            cursor.close()
 
 ##################### end of mood logs #############################
 
