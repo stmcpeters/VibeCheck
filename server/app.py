@@ -65,7 +65,7 @@ def get_users():
 ###################### emojis ##########################
 
 # gets all emojis from emojis table
-@app.route('/get_emojis', methods=['GET'])
+@app.route('/emojis', methods=['GET'])
 def get_emojis():
     connection = None
     cursor = None
