@@ -128,7 +128,7 @@ try:
     # iterate through data and insert into articles table
     # zip() inserts all data in one command (best practice for matching data)
     for title, category, link, author in zip(titles, categories, links, authors):
-      cursor.execute('''INSERT INTO articles (title, category, link, author) VALUES (%s, %s, %s, %s)''', (title.text.strip(), category.text.strip(), link['href'], author.text.strip()))
+      cursor.execute('''INSERT INTO articles (title, category, link, author) VALUES (%s, %s, %s, %s)''', (title.text.strip(), category.text.strip(), link['href'], author['data-byline']))
 
     # commits the changes to the database
     connection.commit()
