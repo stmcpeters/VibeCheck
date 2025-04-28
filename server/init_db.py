@@ -88,9 +88,20 @@ try:
 
     # insert data into the mood logs table
     print('Inserting data into the mood logs table...')
-    cursor.execute('INSERT INTO mood_logs (user_id, emoji_id, journal_entry, sentiment_score)'
+    values = [
+    (1, 1, "Today was a great day! I felt really motivated and was able to finish a lot of tasks ahead of schedule. I also had a great brainstorming session with my team.", 0.9),
+    (1, 3, "Feeling a bit stressed out today. I encountered a lot of unexpected bugs in my code, and it really drained my energy. Hoping tomorrow will be smoother.", 0.4),
+    (1, 2, "Had a productive morning checking things off my to-do list, but by the afternoon, I started feeling a bit tired and distracted. Need to find better balance.", 0.6),
+    (1, 1, "It was a pretty chill day overall. I managed to finish my assignments early and even squeezed in some time to read a few chapters of a book I just started.", 0.8),
+    (1, 3, "Today was overwhelming from the start. My meetings ran longer than expected, and I felt like I didn’t have enough time to catch up on my personal projects.", 0.2),
+    (1, 1, "Great energy all day today! I knocked out a bunch of work tasks, had some awesome conversations with friends, and even found time for a sunset walk.", 0.85),
+    (1, 3, "Not the best day. I woke up feeling off and couldn’t really get into the groove of things. I kept second-guessing myself and getting frustrated easily.", 0.3),
+    (1, 1, "Honestly, today was amazing. Everything just clicked — I felt super creative while coding, got positive feedback from my manager, and treated myself to a nice dinner.", 0.95),
+    (1, 3, "Today felt like an uphill battle. Every small thing seemed harder than usual, and I’m feeling pretty drained. Hoping a good night’s sleep helps reset.", 0.1),
+    (1, 2, "Had a decent day overall. Nothing too exciting happened, but I stayed consistent with my work and made some slow but steady progress on my goals.", 0.5)]
+    cursor.executemany('INSERT INTO mood_logs (user_id, emoji_id, journal_entry, sentiment_score)'
                     'VALUES (%s, %s, %s, %s)',
-                    (1, 1, 'today was a good day! i had a lot of fun building this app!', 0.8))
+                    values)
     print('Data inserted into mood logs successfully.')
 
     # insert data into the articles table
