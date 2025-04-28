@@ -126,9 +126,20 @@ try:
     # insert data into the articles table
     print('Inserting data into the articles table...')
     # iterate through data and insert into articles table
-    # zip() inserts all data in one command (best practice for matching data)
-    for title, category, link, author in zip(titles, categories, links, authors):
-      cursor.execute('''INSERT INTO articles (title, category, link, author) VALUES (%s, %s, %s, %s)''', (title.text.strip(), category.text.strip(), link['href'], author['data-byline']))
+    # validate that all lists have the same length
+    if len(titles) == len(categories) == len(links) == len(authors):
+        # zip() inserts all data in one command (best practice for matching data)
+        for title, category, link, author in zip(titles, categories, links, authors):
+            # gets attributes and sets default values if not available
+            link_href = link.get('href', None)
+            author_byline = author.get('data-byline', None)
+            # only inserts article data if both attributes are present
+            if link_href and author_byline:
+              cursor.execute('''INSERT INTO articles (title, category, link, author) VALUES (%s, %s, %s, %s)''', (title.text.strip(), category.text.strip(), link_href, author_byline))
+            else:
+              print(f'Skipping article because of missing data: link={link_href} and/or author={author_byline}')
+    else:
+        print("Error: Mismatched lengths in scraped data lists. Skipping articles insertion.")
 
     # commits the changes to the database
     connection.commit()
