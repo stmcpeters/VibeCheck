@@ -28,3 +28,9 @@ venv/
 
 # database info
 .env
+
+# testing configs
+__pycache__/
+*.pyc
+*.pyo
+*.cpython-*
