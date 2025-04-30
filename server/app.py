@@ -223,6 +223,8 @@ def delete_user(id):
 
 ##################### end of users ##################################
 
+######################### EMOJIS ###################################
+
 # fetches all emojis from emojis table
 @app.route('/emojis', methods=['GET'])
 def get_emojis():
@@ -252,6 +254,47 @@ def get_emojis():
             connection.close()
         if cursor:
             cursor.close()
+
+
+# get emoji by emoji ID
+@app.route('/fetch_emoji/<id>', methods=['GET'])
+def get_emoji_by_id(id):
+    connection = None
+    cursor = None
+
+    try:
+        # connect to database
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # query to select user by id
+        cursor.execute('''SELECT id, emoji, label FROM emojis WHERE id = %s''', (id,))
+        emoji = cursor.fetchone()
+        if emoji is None:
+            return jsonify({'error': f'Emoji with ID {id} not found'}), 404
+        return jsonify({
+            'id': emoji[0],
+            'emoji': emoji[1],
+            'label': emoji[2]
+        }), 200
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to fetch emoji with that ID'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching emoji with id {id} from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+###################### end of emojis ##########################
 
 ####################### mood logs ###############################
 
