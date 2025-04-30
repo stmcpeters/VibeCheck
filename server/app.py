@@ -101,19 +101,17 @@ def get_emoji_by_id(id):
     cursor = None
 
     try:
-        if request.method == 'GET':
-
-            # connect to database
-            connection = get_db_connection()
-            cursor = connection.cursor()
-            # query to select user by id
-            cursor.execute('''SELECT id, emoji, label FROM emojis WHERE id = %s''', (id,))
-            emoji = cursor.fetchone()
-            return jsonify({
-                'id': emoji[0],
-                'emoji': emoji[1],
-                'label': emoji[2]
-            }), 200
+        # connect to database
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # query to select user by id
+        cursor.execute('''SELECT id, emoji, label FROM emojis WHERE id = %s''', (id,))
+        emoji = cursor.fetchone()
+        return jsonify({
+            'id': emoji[0],
+            'emoji': emoji[1],
+            'label': emoji[2]
+        }), 200
 
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
