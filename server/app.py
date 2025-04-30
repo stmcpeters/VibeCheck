@@ -107,9 +107,13 @@ def get_emoji_by_id(id):
             connection = get_db_connection()
             cursor = connection.cursor()
             # query to select user by id
-            cursor.execute('''SELECT * FROM emojis WHERE id = %s''', (id,))
+            cursor.execute('''SELECT id, emoji, label FROM emojis WHERE id = %s''', (id,))
             emoji = cursor.fetchone()
-            return jsonify({'emoji': emoji}), 200
+            return jsonify({
+                'id': emoji[0],
+                'emoji': emoji[1],
+                'label': emoji[2]
+            }), 200
 
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
