@@ -4,13 +4,13 @@ import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import MoodLogItem from '../components/MoodLogItem'
 
-export default function MoodLogsList() {
+export default function MoodLogsList({ mood_logs }) {
   return (
     <>
       <NavBar />
       <div className='place-items-center'>
         <div className='grow text-2xl'>List of Mood Logs</div>
-        <MoodLogItem />
+        <MoodLogItem mood_logs={mood_logs} />
         {/* pagination */}
         <div className="join">
           <button className="join-item btn btn-disabled">«</button>
