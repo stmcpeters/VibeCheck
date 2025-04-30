@@ -7,7 +7,7 @@ import Chart from "../components/Chart"
 import Articles from "../components/ArticleItem"
 import MoodLogItem from "../components/MoodLogItem"
 
-export default function Dashboard() {
+export default function Dashboard({ mood_logs }) {
   return (
     <>
       <NavBar />
@@ -33,7 +33,7 @@ export default function Dashboard() {
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Recent Mood Logs</h1>
-          <MoodLogItem />
+          <MoodLogItem mood_logs={mood_logs.slice(0,1)} />
         </div>
       </div>
       <Footer />
