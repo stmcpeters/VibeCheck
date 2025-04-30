@@ -107,6 +107,8 @@ def get_emoji_by_id(id):
         # query to select user by id
         cursor.execute('''SELECT id, emoji, label FROM emojis WHERE id = %s''', (id,))
         emoji = cursor.fetchone()
+        if emoji is None:
+            return jsonify({'error': f'Emoji with ID {id} not found'}), 404
         return jsonify({
             'id': emoji[0],
             'emoji': emoji[1],
