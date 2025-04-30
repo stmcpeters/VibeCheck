@@ -127,10 +127,10 @@ def get_emoji_by_id(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 ###################### end of emojis ##########################
 
