@@ -117,7 +117,7 @@ def get_emoji_by_id(id):
 
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to fetch emoji with that ID}'}), 500
+        return jsonify({'error': 'Failed to fetch emoji with that ID'}), 500
     # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
     except psycopg2.OperationalError:
         return jsonify({'error': 'Database connection failed'}), 500
