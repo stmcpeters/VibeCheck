@@ -24,7 +24,7 @@ export default function ArticleItem({articles}) {
             {articles.map((article, index) => (
                 <tr key={article.id} className="hover:bg-base-300">
                   <td>{article.category}</td>
-                  <td><a href={article.link} target='_blank'>{article.title}</a></td>
+                  <td><a href={article.link} target='_blank' rel="noopener noreferrer">{article.title}</a></td>
                   <td>{article.author}</td>
                   <td className='pr-5 pl-5'>
                     <button className="btn btn-square">
