@@ -2,15 +2,15 @@
 import React from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
-import Articles from '../components/ArticleItem'
+import ArticleItem from '../components/ArticleItem'
 
-export default function ArticlesList() {
+export default function ArticlesList({ articles }) {
   return (
     <>
       <NavBar />
       <div className='place-items-center'>
         <div className='grow text-2xl'>List of Articles</div>
-        <Articles />
+        <ArticleItem articles={articles} />
         {/* pagination */}
         <div className="join">
           <button className="join-item btn btn-disabled">«</button>

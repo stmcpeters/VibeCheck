@@ -2,7 +2,10 @@ import os
 import psycopg2
 # loads environment variables from a .env file
 from dotenv import load_dotenv
-
+# import requests module for HTTP requests
+import requests
+# import beautifulsoup for web scraping
+from bs4 import BeautifulSoup
 # loads environment variables from .env file
 load_dotenv()
 
@@ -64,9 +67,9 @@ try:
     cursor.execute('DROP TABLE IF EXISTS articles;')
     cursor.execute('CREATE TABLE articles (id SERIAL PRIMARY KEY,'
                     'title VARCHAR(255) NOT NULL,'
-                    'content TEXT NOT NULL,'
-                    'url VARCHAR(255) NOT NULL,'
-                    'read_time VARCHAR(255) NOT NULL);'
+                    'category TEXT NOT NULL,'
+                    'link VARCHAR(255) NOT NULL,'
+                    'author VARCHAR(255) NOT NULL);'
                     )
     print("Articles table created successfully.") 
 
@@ -93,14 +96,51 @@ try:
                     (1, 1, 'today was a good day! i had a lot of fun building this app!', 0.8))
     print('Data inserted into mood logs successfully.')
 
+    try:
+        url = 'https://www.verywellmind.com/self-improvement-4157212'
+        response = requests.get(url)
+        if response.status_code == requests.codes.ok:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            # print(soup.prettify())
+
+            # find all elements needed
+            titles = soup.find_all('span', class_='card__title-text')
+            # for title in titles:
+            #     print(title.text)
+            links = soup.find_all('a', class_="comp mntl-card-list-items mntl-document-card mntl-card card card--no-image")
+            # for link in links:
+                # href = link.get('href')
+                # print(href)
+            categories = soup.find_all('div', class_='card__content')
+            # for category in categories:
+            #     category_title = category.get('data-tag')
+            #     print(category_title)
+            authors = soup.find_all('div', class_='card__byline mntl-card__byline')
+            # for author in authors:
+            #     print(author.get('data-byline'))
+        else:
+            print('Error:', response.status_code, response.text)
+    except requests.exceptions.RequestException as e:
+      print(f'Error fetching data from {url}: {e}')
+
     # insert data into the articles table
     print('Inserting data into the articles table...')
-    cursor.execute('INSERT INTO articles (title, content, url, read_time)'
-                    'VALUES (%s, %s, %s, %s)',
-                    ('Test Article',
-                    'This is only a test article. It is not real.',
-                    'http://test.com/',
-                    '12 min read'))
+    # iterate through data and insert into articles table
+    # validate that all lists have the same length
+    if len(titles) == len(categories) == len(links) == len(authors):
+        # zip() inserts all data in one command (best practice for matching data)
+        for title, category, link, author in zip(titles, categories, links, authors):
+            # gets attributes and sets default values if not available
+            category_title = category.get('data-tag', None)
+            link_href = link.get('href', None)
+            author_byline = author.get('data-byline', None)
+            # only inserts article data if both attributes are present
+            if link_href and author_byline:
+              cursor.execute('''INSERT INTO articles (title, category, link, author) VALUES (%s, %s, %s, %s)''', (title.text.strip(), category_title, link_href, author_byline))
+            else:
+              print(f'Skipping article because of missing data: link={link_href} and/or author={author_byline}')
+    else:
+        print("Error: Mismatched lengths in scraped data lists. Skipping articles insertion.")
 
     # commits the changes to the database
     connection.commit()
@@ -111,7 +151,7 @@ try:
     print(f'Operational error: {e}')
     # rolls back the interaction in case of an error
     connection.rollback()
-  
+
   # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
   except psycopg2.ProgrammingError as e:
     print(f'Programming error: {e}')
@@ -123,7 +163,7 @@ try:
     print(f'Integrity error: {e}')
     # rolls back the interaction in case of an error
     connection.rollback()
-  
+
   # error handling for any other possible errors
   except Exception as e:
     print(f"Error executing SQL commands: {e}")

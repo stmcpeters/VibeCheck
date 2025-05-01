@@ -11,22 +11,32 @@ import MoodLogsList from './pages/MoodLogsList'
 import LogOut from './pages/LogOut'
 
 function App() {
-  const [response, setResponse] = useState();
+  const [articles, setArticles] = useState([]);
 
     // function to fetch data using axios from server
-    const fetchAPI = async () => {
+    const fetchArticles = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8080/');
-        setResponse(response.data.message);
+        const response = await axios.get('http://127.0.0.1:8080/articles');
+        const data = response.data.articles;
+
+        // transform the data into an array of objects
+        const articles = data.map((article) => ({
+          id: article[0],
+          title: article[1],
+          category: article[2],
+          link: article[3],
+          author: article[4],
+        }));
+    
+        setArticles(articles);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setResponse('Error fetching data');
+        console.error('Error fetching articles from database:', error);
     }
   }
 
   // useEffect will fetch data from server on initial page load
   useEffect(() => {
-    fetchAPI();
+    fetchArticles();
   }, []);
 
   return (
@@ -34,10 +44,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard articles={articles} />} />
           <Route path="/auth" element={<UserAuth />} />
           <Route path="/*" element={<ErrorPage />} />
-          <Route path='/articles' element={<ArticlesList />} />
+          <Route path='/articles' element={<ArticlesList articles={articles} />} />
           <Route path='/logs' element={<MoodLogsList />} />
           <Route path='/logout' element={<LogOut />} />
         </Routes>
