@@ -283,7 +283,6 @@ COPY public.emojis (id, emoji, label) FROM stdin;
 3	☹️	unhappy
 \.
 
-
 --
 -- Data for Name: mood_logs; Type: TABLE DATA; Schema: public; Owner: steph
 --
