@@ -283,16 +283,6 @@ COPY public.emojis (id, emoji, label) FROM stdin;
 3	☹️	unhappy
 \.
 
-
---
--- Data for Name: mood_logs; Type: TABLE DATA; Schema: public; Owner: steph
---
-
-COPY public.mood_logs (id, user_id, emoji_id, journal_entry, sentiment_score, created_at) FROM stdin;
-1	1	1	today was a good day! i had a lot of fun building this app!	0.8	2025-04-28 11:02:29.993013
-\.
-
-
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: steph
 --
