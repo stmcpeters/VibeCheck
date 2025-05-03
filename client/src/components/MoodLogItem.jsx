@@ -7,7 +7,6 @@ export default function MoodLogItem({ mood_logs }) {
       return <p>No mood logs available.</p>;
     }
 
-    console.log(mood_logs[0].created_at);
   return (
     <>
       <div className="overflow-x-auto">
@@ -24,10 +23,10 @@ export default function MoodLogItem({ mood_logs }) {
           </thead>
           <tbody>
             {/* row 1 */}
-            {mood_logs.map((mood_log, index) => (
-                <tr key={mood_log.index} className="hover:bg-base-300">
+            {mood_logs.map((mood_log) => (
+                <tr key={mood_log.id} className="hover:bg-base-300">
                   <td>{new Date(mood_log.created_at).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}</td>
-                  <td>{mood_log.emoji_id}</td>
+                  <td>{mood_log.emoji}</td>
                   <td>{mood_log.journal_entry}</td>
                   <td>{mood_log.sentiment_score}</td>
                   <td className='pr-5 pl-5'>
