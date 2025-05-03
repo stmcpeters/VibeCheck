@@ -32,11 +32,11 @@ export default function App() {
 
         // transform the data into an array of objects
         const mood_logs = data.map((mood_log) => ({
-          id: mood_log[0],
-          emoji_id: mood_log[2],
-          journal_entry: mood_log[3],
-          sentiment_score: mood_log[4],
-          created_at: mood_log[5],
+          id: mood_log.id,
+          emoji: mood_log.emoji,
+          journal_entry: mood_log.journal_entry,
+          sentiment_score: mood_log.sentiment_score,
+          created_at: mood_log.created_at,
         }));
 
         setMoodLogs(mood_logs);
