@@ -33,7 +33,7 @@ export default function Dashboard({ mood_logs }) {
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Recent Mood Logs</h1>
-          <MoodLogItem mood_logs={mood_logs.slice(0,1)} />
+          <MoodLogItem mood_logs={mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2)} />
         </div>
       </div>
       <Footer />
