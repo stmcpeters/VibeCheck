@@ -264,11 +264,29 @@ def get_mood_logs():
     try: 
         connection = get_db_connection()
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM mood_logs;')
+        # query to join the mood_logs and emojis tables to get the emoji
+        cursor.execute('''
+            SELECT mood_logs.id, mood_logs.user_id, emojis.emoji, mood_logs.journal_entry, 
+                   mood_logs.sentiment_score, mood_logs.created_at
+            FROM mood_logs
+            JOIN emojis ON mood_logs.emoji_id = emojis.id;
+        ''')
         mood_logs = cursor.fetchall()
+        # format the mood logs data
+        mood_logs_list = [
+            {
+                'id': row[0],
+                'user_id': row[1],
+                'emoji': row[2],
+                'journal_entry': row[3],
+                'sentiment_score': row[4],
+                'created_at': row[5]
+            }
+            for row in mood_logs          
+        ]
         cursor.close()
         connection.close()
-        return jsonify({'mood_logs': mood_logs}), 200
+        return jsonify({'mood_logs': mood_logs_list}), 200
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
         return jsonify({'error': 'Failed to fetch mood logs'}), 500
