@@ -223,6 +223,8 @@ def delete_user(id):
 
 ##################### end of users ##################################
 
+######################### EMOJIS ###################################
+
 # fetches all emojis from emojis table
 @app.route('/emojis', methods=['GET'])
 def get_emojis():
@@ -252,6 +254,47 @@ def get_emojis():
             connection.close()
         if cursor:
             cursor.close()
+
+
+# get emoji by emoji ID
+@app.route('/fetch_emoji/<id>', methods=['GET'])
+def get_emoji_by_id(id):
+    connection = None
+    cursor = None
+
+    try:
+        # connect to database
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # query to select user by id
+        cursor.execute('''SELECT id, emoji, label FROM emojis WHERE id = %s''', (id,))
+        emoji = cursor.fetchone()
+        if emoji is None:
+            return jsonify({'error': f'Emoji with ID {id} not found'}), 404
+        return jsonify({
+            'id': emoji[0],
+            'emoji': emoji[1],
+            'label': emoji[2]
+        }), 200
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to fetch emoji with that ID'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching emoji with id {id} from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+###################### end of emojis ##########################
 
 ####################### mood logs ###############################
 
@@ -479,7 +522,6 @@ def delete_mood_log(id):
 
 ######################## articles ############################
 
-
 # fetches all articles from articles table
 @app.route('/articles', methods=['GET'])
 def get_articles():
@@ -510,168 +552,6 @@ def get_articles():
         if connection:
             connection.close()
 
-# get article by id
-@app.route('/get_article/<int:id>', methods=['GET'])
-def get_article(id):
-    connection = None
-    cursor = None
-
-    try:
-        if request.method == 'GET':
-
-            # connect to database
-            connection = get_db_connection()
-            cursor = connection.cursor()
-            # query to select article by id
-            cursor.execute('''SELECT * FROM articles WHERE id = %s''', (id,))
-            article = cursor.fetchone()
-            return jsonify({'article': article}), 200
-
-    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
-    except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to fetch article by that ID'}), 500
-    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
-    except psycopg2.OperationalError:
-        return jsonify({'error': 'Database connection failed'}), 500
-    # will catch any other errors
-    except Exception as e:
-        print(f'Error fetching article by that ID from the database: {e}')
-        return jsonify({'error': 'An unexpected error occurred'}), 500
-
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
-
-# post new article
-@app.route('/add_article', methods=['POST'])
-def add_article():
-    connection = None
-    cursor = None
-
-    try:
-        if request.method == 'POST':
-
-            # parse the JSON data
-            data = request.get_json()
-            title = data.get('title')
-            url = data.get('url')
-            content = data.get('content')
-            read_time = data.get('read_time')
-
-            # validate input
-            if not title or not content or not url or not read_time:
-                return jsonify({"error": "Missing required fields"}), 400
-
-            # connect to database
-            connection = get_db_connection()
-            cursor = connection.cursor()
-            # query to add a new article
-            cursor.execute('''INSERT INTO articles
-                            (title, url, content, read_time) VALUES (%s, %s, %s, %s)''', (title, url, content, read_time))
-            # commit changes
-            connection.commit()
-            return jsonify({'message': 'New article has been created!'}), 201
-
-    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
-    except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to create new article'}), 500
-    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
-    except psycopg2.OperationalError:
-        return jsonify({'error': 'Database connection failed'}), 500
-    # will catch any other errors
-    except Exception as e:
-        print(f'Error adding article to the database: {e}')
-        return jsonify({'error': 'An unexpected error occurred'}), 500
-
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
-
-# update article by id
-@app.route('/update_article/<int:id>', methods=['PUT'])
-def update_article(id):
-    connection = None
-    cursor = None
-
-    try:
-        if request.method == 'PUT':
-
-            # parse the JSON data
-            data = request.get_json()
-            new_title = data.get('title')
-            new_url = data.get('url')
-            new_content = data.get('content')
-            new_read_time = data.get('read_time')
-
-            # validate input
-            if not new_title or not new_content or not new_url or not new_read_time:
-                return jsonify({"error": "Missing required fields"}), 400
-
-            # connect to database
-            connection = get_db_connection()
-            cursor = connection.cursor()
-            # query to update an existing article
-            cursor.execute('''UPDATE articles SET title = %s, url = %s, content = %s, read_time = %s WHERE id = %s''', (new_title, new_url, new_content, new_read_time, id))
-            # commit changes
-            connection.commit()
-            return jsonify({'message': 'Article has been updated!'}), 200
-
-    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
-    except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to update article'}), 500
-    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
-    except psycopg2.OperationalError:
-        return jsonify({'error': 'Database connection failed'}), 500
-    # will catch any other errors
-    except Exception as e:
-        print(f'Error updating article in the database: {e}')
-        return jsonify({'error': 'An unexpected error occurred'}), 500
-
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
-
-# delete article by id
-@app.route('/delete_article/<int:id>', methods=['DELETE'])
-def delete_article(id):
-    connection = None
-    cursor = None
-
-    try:
-        if request.method == 'DELETE':
-
-            # connect to database
-            connection = get_db_connection()
-            cursor = connection.cursor()
-            # query to delete article
-            cursor.execute('''DELETE FROM articles WHERE id = %s''', (id,))
-            # commit changes
-            connection.commit()
-            return jsonify({'message': 'Article has been deleted!'}), 200
-
-    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
-    except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to delete article'}), 500
-    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
-    except psycopg2.OperationalError:
-        return jsonify({'error': 'Database connection failed'}), 500
-    # will catch any other errors
-    except Exception as e:
-        print(f'Error deleting article from the database: {e}')
-        return jsonify({'error': 'An unexpected error occurred'}), 500
-
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
-            
 ########################### end of articles ############################
 
 # route for the root URL

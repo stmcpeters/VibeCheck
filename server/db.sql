@@ -27,9 +27,9 @@ SET default_table_access_method = heap;
 CREATE TABLE public.articles (
     id integer NOT NULL,
     title character varying(255) NOT NULL,
-    content text NOT NULL,
-    url character varying(255) NOT NULL,
-    read_time character varying(255) NOT NULL
+    category text NOT NULL,
+    link character varying(255) NOT NULL,
+    author character varying(255) NOT NULL
 );
 
 
@@ -196,15 +196,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Data for Name: articles; Type: TABLE DATA; Schema: public; Owner: steph
---
-
-COPY public.articles (id, title, content, url, read_time) FROM stdin;
-1	Test Article	This is only a test article. It is not real.	http://test.com/	12 min read
-\.
-
-
---
 -- Data for Name: emojis; Type: TABLE DATA; Schema: public; Owner: steph
 --
 
@@ -214,30 +205,19 @@ COPY public.emojis (id, emoji, label) FROM stdin;
 3	☹️	unhappy
 \.
 
-
 --
 -- Data for Name: mood_logs; Type: TABLE DATA; Schema: public; Owner: steph
 --
 
 COPY public.mood_logs (id, user_id, emoji_id, journal_entry, sentiment_score, created_at) FROM stdin;
-1	1	1	today was a good day! i had a lot of fun building this app!	0.8	2025-04-17 21:58:46.945241
+1	1	1	today was a good day! i had a lot of fun building this app!	0.8	2025-04-28 11:02:29.993013
 \.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: steph
---
-
-COPY public.users (id, email, password, oauth_id, created_at) FROM stdin;
-1	test@test.com	password123	\N	2025-04-17 21:58:46.945241
-\.
-
 
 --
 -- Name: articles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: steph
 --
 
-SELECT pg_catalog.setval('public.articles_id_seq', 1, true);
+SELECT pg_catalog.setval('public.articles_id_seq', 70, true);
 
 
 --

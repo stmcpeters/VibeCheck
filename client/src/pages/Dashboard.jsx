@@ -4,14 +4,17 @@ import Footer from "../components/Footer"
 import MoodForm from "../components/MoodForm"
 import SearchBar from "../components/SearchBar"
 import Chart from "../components/Chart"
-import Articles from "../components/ArticleItem"
+import ArticleItem from "../components/ArticleItem"
 import MoodLogItem from "../components/MoodLogItem"
 
-export default function Dashboard({ mood_logs }) {
+export default function Dashboard({ mood_logs, articles }) {
 
   // creates variable to hold the 2 most recent mood logs to be displayed on the dashboard
-  let sortedMoodLogs = mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2);
+  const sortedMoodLogs = mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2);
 
+  // creates variable to hold the 2 articles to be displayed on the dashboard
+  const featuredArticles = articles.slice(0,3);
+  
   return (
     <>
       <NavBar />
@@ -32,7 +35,7 @@ export default function Dashboard({ mood_logs }) {
       <div className="flex w-full">
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Most Recent Web Scraped Articles</h1>
-          <Articles />
+          <ArticleItem articles={featuredArticles} />
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-100 grow place-items-center">
