@@ -8,6 +8,10 @@ import Articles from "../components/ArticleItem"
 import MoodLogItem from "../components/MoodLogItem"
 
 export default function Dashboard({ mood_logs }) {
+
+  // creates variable to hold the 2 most recent mood logs to be displayed on the dashboard
+  let sortedMoodLogs = mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2);
+
   return (
     <>
       <NavBar />
@@ -33,7 +37,7 @@ export default function Dashboard({ mood_logs }) {
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Recent Mood Logs</h1>
-          <MoodLogItem mood_logs={mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2)} />
+          <MoodLogItem mood_logs={sortedMoodLogs} />
         </div>
       </div>
       <Footer />
