@@ -93,8 +93,8 @@ def add_user():
             hash = bcrypt.hashpw(bytes, bcrypt.gensalt())
             # converting the hashed password to a string
             stored_password = str(hash.decode('utf-8'))
-            print('hashed password: ', hash)
-            print('stored password: ', stored_password)
+            # print('hashed password: ', hash)
+            # print('stored password: ', stored_password)
 
             # query to insert new user
             cursor.execute('''INSERT INTO users (email, password) VALUES (%s , %s)''', (email, stored_password))
