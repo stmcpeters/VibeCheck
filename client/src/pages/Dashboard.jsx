@@ -7,7 +7,14 @@ import Chart from "../components/Chart"
 import ArticleItem from "../components/ArticleItem"
 import MoodLogItem from "../components/MoodLogItem"
 
-export default function Dashboard({ articles }) {
+export default function Dashboard({ mood_logs, articles }) {
+
+  // creates variable to hold the 2 most recent mood logs to be displayed on the dashboard
+  const sortedMoodLogs = mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2);
+
+  // creates variable to hold the 2 articles to be displayed on the dashboard
+  const featuredArticles = articles.slice(0,3);
+  
   return (
     <>
       <NavBar />
@@ -28,12 +35,12 @@ export default function Dashboard({ articles }) {
       <div className="flex w-full">
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Most Recent Web Scraped Articles</h1>
-          <ArticleItem articles={articles.slice(0,3)} />
+          <ArticleItem articles={featuredArticles} />
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Recent Mood Logs</h1>
-          <MoodLogItem />
+          <MoodLogItem mood_logs={sortedMoodLogs} />
         </div>
       </div>
       <Footer />
