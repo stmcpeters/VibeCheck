@@ -88,11 +88,11 @@ def add_user():
             cursor = connection.cursor()
 
             # converting password to an array of bytes
-            bytes = password.encode('utf-8');
+            password_bytes = password.encode('utf-8');
             # hashing the password and generating a salt
-            hash = bcrypt.hashpw(bytes, bcrypt.gensalt())
+            hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
             # converting the hashed password to a string
-            stored_password = str(hash.decode('utf-8'))
+            stored_password = str(hashed_password.decode('utf-8'))
             # print('hashed password: ', hash)
             # print('stored password: ', stored_password)
 
