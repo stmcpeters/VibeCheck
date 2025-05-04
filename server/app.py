@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import psycopg2
+import bcrypt
 # loads environment variables from a .env file
 from dotenv import load_dotenv
 
@@ -85,8 +86,18 @@ def add_user():
             # connect to database
             connection = get_db_connection()
             cursor = connection.cursor()
+
+            # converting password to an array of bytes
+            password_bytes = password.encode('utf-8');
+            # hashing the password and generating a salt
+            hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+            # converting the hashed password to a string
+            stored_password = str(hashed_password.decode('utf-8'))
+            # print('hashed password: ', hash)
+            # print('stored password: ', stored_password)
+
             # query to insert new user
-            cursor.execute('''INSERT INTO users (email, password) VALUES (%s , %s)''', (email, password))
+            cursor.execute('''INSERT INTO users (email, password) VALUES (%s , %s)''', (email, stored_password))
             # commit changes
             connection.commit()
             return jsonify({'message': 'new user has been created!'}), 200
