@@ -66,7 +66,7 @@ def get_users():
             cursor.close()
 
 # creates a new user 
-@app.route('/add_user', methods=['POST'])
+@app.route('/register', methods=['POST'])
 def add_user():
     connection = None
     cursor = None
