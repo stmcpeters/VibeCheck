@@ -60,10 +60,10 @@ def get_users():
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # creates a new user 
 @app.route('/add_user', methods=['POST'])
@@ -114,10 +114,10 @@ def add_user():
         return jsonify({'error': 'An unexpected error occurred'}), 500
     
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # fetches a user by ID
 @app.route('/get_user/<int:id>', methods=['GET'])
@@ -148,10 +148,10 @@ def get_user(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
     
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # updates a user's info
 @app.route('/update_user/<int:id>', methods=['PUT'])
@@ -192,10 +192,10 @@ def update_user(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
     
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # delete a user
 @app.route('/delete_user/<int:id>', methods=['DELETE'])
@@ -227,10 +227,10 @@ def delete_user(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
     
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 ##################### end of users ##################################
 
@@ -261,10 +261,10 @@ def get_emojis():
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 
 # get emoji by emoji ID
@@ -352,10 +352,10 @@ def get_mood_logs():
         return jsonify({'error': 'An unexpected error occurred'}), 500
     
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # creates a new mood log entry
 @app.route('/add_mood_log', methods=['POST'])
@@ -405,10 +405,10 @@ def add_mood_log():
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # fetches a specific mood log by ID
 @app.route('/get_mood_log/<int:id>', methods=['GET'])
@@ -438,10 +438,10 @@ def get_mood_log(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # update an existing mood log by ID
 @app.route('/update_mood_log/<int:id>', methods=['PUT'])
@@ -489,10 +489,10 @@ def update_mood_log(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 # delete a mood log by ID
 @app.route('/delete_mood_log/<int:id>', methods=['DELETE'])
@@ -524,10 +524,10 @@ def delete_mood_log(id):
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
     finally:
-        if connection:
-            connection.close()
         if cursor:
             cursor.close()
+        if connection:
+            connection.close()
 
 ##################### end of mood logs #############################
 
