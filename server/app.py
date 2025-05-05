@@ -119,6 +119,60 @@ def add_user():
         if cursor:
             cursor.close()
 
+# login a user
+@app.route('/login', methods=['POST'])
+def login_user():
+    connection = None
+    cursor = None
+    try:
+        # gets the data from the request
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        # validate input
+        if not email or not password:
+            return jsonify({"error": "Email and password are required"}), 400
+        
+        # connect to database
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # query to select user by email
+        cursor.execute('''SELECT * FROM users WHERE email = %s''', (email,))
+        user = cursor.fetchone()
+
+        # check if user exists
+        if user is None:
+            return jsonify({'message': 'Invalid email or password'}), 404
+        
+        # convert password to bytes
+        password = password.encode('utf-8')
+        # get the hashed password from the database
+        stored_password = user[2].encode('utf-8')
+
+        # check if password matches
+        if bcrypt.checkpw(password, stored_password):
+            return jsonify({'message': 'Login successful!'}), 200
+        else:
+            return jsonify({'message': 'Invalid email or password'}), 404
+
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to authenticate user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error during login: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
 # fetches a user by ID
 @app.route('/get_user/<int:id>', methods=['GET'])
 def get_user(id):
