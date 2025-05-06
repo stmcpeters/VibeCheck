@@ -14,10 +14,8 @@ export default function Home() {
           <div className="hero-content text-neutral-content text-center">
             <div className="max-w-md">
               <h1 className="mb-5 text-5xl font-bold">Welcome to VibeCheck!</h1>
-              {/* <p className="mb-5">
-              {response}
-              </p> */}
-              <button className="btn btn-primary"><a href="/auth">Login/Sign up</a></button>
+              <button className="btn btn-primary"><a href="/login">Login</a></button>
+              <button className="btn btn-info secondary ml-5"><a href="/register">Register</a></button>
             </div>
           </div>
         </div>
