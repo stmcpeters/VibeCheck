@@ -2,13 +2,28 @@ import React from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import { useState } from 'react'
+import axios from 'axios'
 
 export default function Register() {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState(null)
+    const [message, setMessage] = useState(null)
 
-    // Function to handle registration
-    // const handleRegister = () => {
-
-    // }
+    // function to handle registration
+    const handleRegister = async (e) => {
+    // prevent default form submission
+    e.preventDefault();
+    try {
+      const response = await axios.post('/register', {email, password});
+      console.log(response.data);
+      setMessage('Registration successful. You can now log in.');
+      setError(null);
+    } catch (error) {
+      console.error('Registration failed:', error);
+      setError('Failed to register. Please try again.');
+    }
+    }
 
   return (
     <>
@@ -20,12 +35,14 @@ export default function Register() {
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
 
               <label className="fieldset-label">Email</label>
-              <input type="email" className="input" placeholder="Email" />
+              <input type="email" className="input" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)}/>
 
               <label className="fieldset-label">Password</label>
-              <input type="password" className="input" placeholder="Password" />
+              <input type="password" className="input" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
 
-              <button type="button" className="btn btn-neutral mt-4">Register</button>
+              <button type="submit" className="btn btn-neutral mt-4" onClick={handleRegister}>Register</button>
+              {error && <p className="text-red-500">{error}</p>}
+              {message && <p className="text-green-500">{message}</p>}
             </fieldset>
             {/* Google */}
             <button className="btn bg-white text-black border-[#e5e5e5]">
