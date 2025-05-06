@@ -3,12 +3,15 @@ import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function UserAuth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  
+  const navigate = useNavigate();
 
   // function to handle login
   const handleLogin = async (e) => {
@@ -16,10 +19,10 @@ export default function UserAuth() {
     e.preventDefault();
     try {
       const response = await axios.post('/login', {email, password});
-      console.log(response.data);
+      console.log('Login successful:', response.data);
       setUser(response.data.user);
-      // redirect to dashboard
-      window.location.href = '/dashboard';
+      // redirect to dashboard after successful login
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error logging in:', error);
       setError('Invalid email or password');
