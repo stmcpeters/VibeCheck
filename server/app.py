@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
+from flask_session import Session
 import os
 import psycopg2
 import bcrypt
@@ -8,6 +9,8 @@ from dotenv import load_dotenv
 
 # creates Flask app instance
 app = Flask(__name__)
+# sets the secret key for session management
+app.secret_key = os.environ.get('SECRET_KEY')
 # enables cross-origin requests for all routes
 cors = CORS(app, origins='*')
 
@@ -151,7 +154,8 @@ def login_user():
         stored_password = user[2].encode('utf-8')
 
         # check if password matches
-        if bcrypt.checkpw(password, stored_password):
+        if user and bcrypt.checkpw(password, stored_password):
+            session['user_id'] = user[0]
             return jsonify({'message': 'Login successful!'}), 200
         else:
             return jsonify({'message': 'Invalid email or password'}), 404
@@ -172,6 +176,49 @@ def login_user():
             cursor.close()
         if connection:
             connection.close()
+
+# gets the current logged in user
+@app.route('/current_user', methods=['GET'])
+def get_current_user():
+    connection = None
+    cursor = None
+
+    try:
+        user_id = session.get('user_id')
+        if user_id is None:
+            return jsonify({'error': 'User not logged in'}), 401
+        
+        # connect to database
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # query to select user by id
+        cursor.execute('''SELECT * FROM users WHERE id = %s''', (user_id,))
+        user = cursor.fetchone()
+        if user:
+            return jsonify({'user': user}), 200
+        
+    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
+    except psycopg2.ProgrammingError:
+        return jsonify({'error': 'Failed to fetch user'}), 500
+    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
+    except psycopg2.OperationalError:
+        return jsonify({'error': 'Database connection failed'}), 500
+    # will catch any other errors
+    except Exception as e:
+        print(f'Error fetching user from the database: {e}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+# log out a user
+@app.route('/logout', methods=['POST'])
+def logout_user():
+    session.pop('user_id')
+    return jsonify({'message': 'User logged out successfully!'}), 200
 
 # fetches a user by ID
 @app.route('/get_user/<int:id>', methods=['GET'])
