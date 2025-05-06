@@ -1,17 +1,26 @@
 // Forms for email/password login and registration. Includes OAuth Google login button and CAPTCHA checkbox
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 
 export default function UserAuth() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // Function to handle login
+  // const handleLogin = () => {
+
+  // }
+
+
   return (
     <>
       <NavBar />
       <div className="card bg-base-100">
         <div className="card-body">
-          <h2 className="card-title grow heading">Login/Register</h2>
+          <h2 className="card-title grow heading">Login</h2>
           <div className="card bg-base-300 rounded-box grid h-100 grow place-items-center">
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-              <legend className="fieldset-legend">Login</legend>
 
               <label className="fieldset-label">Email</label>
               <input type="email" className="input" placeholder="Email" />
@@ -19,7 +28,7 @@ export default function UserAuth() {
               <label className="fieldset-label">Password</label>
               <input type="password" className="input" placeholder="Password" />
 
-              <button className="btn btn-neutral mt-4">Login</button>
+              <button type="button" className="btn btn-neutral mt-4">Login</button>
             </fieldset>
             {/* Google */}
             <button className="btn bg-white text-black border-[#e5e5e5]">
@@ -52,20 +61,7 @@ export default function UserAuth() {
               </svg>
               Login with Google
             </button>
-          </div>
-          <div className="divider divider-horizontal"></div>
-          <div className="card bg-base-300 rounded-box grid h-100 grow place-items-center">
-            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-              <legend className="fieldset-legend">Register</legend>
-
-              <label className="fieldset-label">Email</label>
-              <input type="email" className="input" placeholder="Email" />
-
-              <label className="fieldset-label">Password</label>
-              <input type="password" className="input" placeholder="Password" />
-
-              <button className="btn btn-neutral mt-4">Register</button>
-            </fieldset>
+            <p>Don't have an account? <a href='/register'>Register here</a></p>
           </div>
         </div>
       </div>
