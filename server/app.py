@@ -12,7 +12,17 @@ app = Flask(__name__)
 # sets the secret key for session management
 app.secret_key = os.environ.get('SECRET_KEY')
 # enables cross-origin requests for all routes
-cors = CORS(app, origins='*')
+cors = CORS(app, origins='http://localhost:5173', supports_credentials=True) 
+
+app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
+# true if using HTTPS for production
+# false if using HTTP for development
+app.config['SESSION_COOKIE_SECURE'] = False
+# sets the session type to filesystem
+app.config['SESSION_TYPE'] = 'filesystem'
+# initializes the session
+Session(app)
+
 
 # creates a connection to the PostgreSQL database
 # using environment variables for credentials
@@ -156,6 +166,7 @@ def login_user():
         # check if password matches
         if user and bcrypt.checkpw(password, stored_password):
             session['user_id'] = user[0]
+            print(f"Session set: {session['user_id']}")
             return jsonify({'message': 'Login successful!'}), 200
         else:
             return jsonify({'message': 'Invalid email or password'}), 404
@@ -185,6 +196,7 @@ def get_current_user():
 
     try:
         user_id = session.get('user_id')
+        print(f'Session user_id: {user_id}')
         if user_id is None:
             return jsonify({'error': 'User not logged in'}), 401
         
