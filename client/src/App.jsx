@@ -4,7 +4,8 @@ import axios from 'axios'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
-import UserAuth from './pages/UserAuth'  
+import Login from './pages/Login'  
+import Register from './pages/Register'
 import ErrorPage from './pages/ErrorPage'
 import ArticlesList from './pages/ArticlesList'
 import MoodLogsList from './pages/MoodLogsList'
@@ -14,10 +15,11 @@ export default function App() {
   const [response, setResponse] = useState();
   const [mood_logs, setMoodLogs] = useState([]);
   const [articles, setArticles] = useState([]);
-
+  const [user, setUser] = useState(null);
+  
     // axios config
     // sets the base URL for axios to the server URL
-    axios.defaults.baseURL = 'http://127.0.0.1:8080/';
+    axios.defaults.baseURL = 'http://localhost:8080/';
     axios.defaults.withCredentials = true;
 
     // function to fetch data using axios from server
@@ -30,7 +32,18 @@ export default function App() {
         setResponse('Error fetching data');
     }
   }
-    
+
+    // function to fetch user data using axios from server
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get('/current_user');
+        setUser(response.data.user);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setUser(null);
+      }
+    }
+
     // function to fetch articles data using axios from server
     const fetchArticles = async () => {
       try {
@@ -76,6 +89,7 @@ export default function App() {
     // useEffect will fetch data from server on initial page load
     useEffect(() => {
       fetchAPI();
+      fetchUser();
       fetchArticles();
       fetchMoodLogs();
     }, []);
@@ -86,7 +100,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard mood_logs={mood_logs} articles={articles} />} />
-          <Route path="/auth" element={<UserAuth />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/*" element={<ErrorPage />} />
           <Route path='/articles' element={<ArticlesList articles={articles} />} />
           <Route path='/logs' element={<MoodLogsList mood_logs={mood_logs} />} />
