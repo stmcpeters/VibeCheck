@@ -15,13 +15,15 @@ export default function App() {
   const [mood_logs, setMoodLogs] = useState([]);
   const [articles, setArticles] = useState([]);
 
-    // creates a variable to hold the base URL for the server
-    const baseURL = 'http://127.0.0.1:8080/';
+    // axios config
+    // sets the base URL for axios to the server URL
+    axios.defaults.baseURL = 'http://127.0.0.1:8080/';
+    axios.defaults.withCredentials = true;
 
     // function to fetch data using axios from server
     const fetchAPI = async () => {
       try {
-        const response = await axios.get(baseURL);
+        const response = await axios.get('/');
         setResponse(response.data.message);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -32,7 +34,7 @@ export default function App() {
     // function to fetch articles data using axios from server
     const fetchArticles = async () => {
       try {
-        const response = await axios.get(baseURL + 'articles');
+        const response = await axios.get('/articles');
         const data = response.data.articles;
 
         // transform the data into an array of objects
@@ -53,7 +55,7 @@ export default function App() {
     // function to fetch mood logs using axios from server
     const fetchMoodLogs = async () => {
       try {
-        const response = await axios.get(baseURL + 'mood_logs');
+        const response = await axios.get('/mood_logs');
         const data = response.data.mood_logs;
 
         // transform the data into an array of objects
