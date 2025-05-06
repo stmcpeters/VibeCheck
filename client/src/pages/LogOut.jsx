@@ -1,18 +1,30 @@
 // log out successful page
 import axios from 'axios'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Footer from '../components/Footer'
-export default function LogOut() {
+import { useNavigate } from 'react-router-dom'
 
-  // function to handle logout
+export default function LogOut({ setIsLoggedIn, setUser }) {
+
+  // useNavigate hook to navigate to different routes
+  const navigate = useNavigate();
+
+  // useEffect to call handleLogout when the component mounts
+  useEffect(() => {
+      // function to handle logout
   const handleLogout = async (e) => {
     try {
-      const response = await axios.post('/logout'); 
-      console.log(response.data);
+      await axios.post('/logout'); 
+      setIsLoggedIn(false);
+      setUser(null);
+      navigate('/'); // redirect to home page
     } catch (error) {
       console.error('Error logging out:', error);
     }
   }
+  
+    handleLogout();
+  }, []);
 
   return (
     <>
@@ -24,8 +36,7 @@ export default function LogOut() {
           <div className="hero-overlay"></div>
           <div className="hero-content text-neutral-content text-center">
             <div className="max-w-md">
-              <h1 className="mb-5 text-2xl font-bold">You've succesfully logged out!</h1>
-              <button className="btn btn-primary"><a href="/">Back to Home</a></button>
+              <h1 className="mb-5 text-2xl font-bold">Logging out...</h1>
             </div>
           </div>
         </div>
