@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import requests
 # import beautifulsoup for web scraping
 from bs4 import BeautifulSoup
+# import bcrypt
+import bcrypt
 # loads environment variables from .env file
 load_dotenv()
 
@@ -34,7 +36,7 @@ try:
     # drops the users table if it exists
     cursor.execute('DROP TABLE IF EXISTS users CASCADE;')
     cursor.execute('CREATE TABLE users (id SERIAL PRIMARY KEY,'
-                    'email VARCHAR(255) NOT NULL,' 
+                    'email VARCHAR(255) UNIQUE NOT NULL,' 
                     'password VARCHAR(255) NOT NULL,'
                     'OAuth_id VARCHAR(255) DEFAULT NULL,'
                     'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);'
@@ -75,10 +77,11 @@ try:
 
     # insert data into the users table
     print("Inserting data into the users table...")
+    # hash the password
+    hashed_password = bcrypt.hashpw('password'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8') 
     cursor.execute("INSERT INTO users (email, password)"
                     "VALUES (%s, %s)",
-                    ('test@test.com',
-                    'password123'))
+                    ('test@test.com', hashed_password))
     print("Data inserted into users table successfully.")
 
     # insert data into the emojis table
