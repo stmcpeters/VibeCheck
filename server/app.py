@@ -174,7 +174,8 @@ def login_user():
             print(f"Session set: {session['user_id']}")
             return jsonify({'message': 'Login successful!'}), 200
         else:
-            return jsonify({'message': 'Invalid email or password'}), 404
+            return jsonify({'message': 'Invalid email or password'}), 401
+
 
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
