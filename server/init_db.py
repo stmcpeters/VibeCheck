@@ -39,7 +39,8 @@ try:
                     'email VARCHAR(255) UNIQUE NOT NULL,' 
                     'password VARCHAR(255) NOT NULL,'
                     'OAuth_id VARCHAR(255) DEFAULT NULL,'
-                    'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);'
+                    'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP),'
+                    'CHECK (OAuth_id IS NOT NULL OR password IS NOT NULL);'
                     )
     print("Users table created successfully.")
 
