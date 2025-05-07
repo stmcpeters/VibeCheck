@@ -34,3 +34,9 @@ __pycache__/
 *.pyc
 *.pyo
 *.cpython-*
+
+# pytest cache
+.pytest_cache/
+
+# Flask-Session data
+flask-session/
