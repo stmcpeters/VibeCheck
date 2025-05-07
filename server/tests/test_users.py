@@ -289,6 +289,3 @@ def test_insert_empty_password(client):
     response = client.post('/register', json={'email': 'test123@test.com', 'password': ''})
     assert response.status_code == 400
     assert response.get_json() == {'error': 'Missing required fields'}
-
-
-  # test password hashing and verification
