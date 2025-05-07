@@ -236,7 +236,6 @@ def get_current_user():
 @app.route('/logout', methods=['POST'])
 def logout_user():
     session.clear()
-    print
     return jsonify({'message': 'User logged out successfully!'}), 200
 
 # fetches a user by ID
