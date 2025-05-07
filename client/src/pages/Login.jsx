@@ -1,25 +1,52 @@
 // Forms for email/password login and registration. Includes OAuth Google login button and CAPTCHA checkbox
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function UserAuth() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  
+  const navigate = useNavigate();
+
+  // function to handle login
+  const handleLogin = async (e) => {
+    // prevent default form submission
+    e.preventDefault();
+    try {
+      const response = await axios.post('/login', {email, password});
+      console.log('Login successful:', response.data);
+      setUser(response.data.user);
+      // redirect to dashboard after successful login
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setError('Invalid email or password');
+    }
+  }
+
+
   return (
     <>
       <NavBar />
       <div className="card bg-base-100">
         <div className="card-body">
-          <h2 className="card-title grow heading">Login/Register</h2>
+          <h2 className="card-title grow heading">Login</h2>
           <div className="card bg-base-300 rounded-box grid h-100 grow place-items-center">
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-              <legend className="fieldset-legend">Login</legend>
 
               <label className="fieldset-label">Email</label>
-              <input type="email" className="input" placeholder="Email" />
+              <input type="email" className="input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
 
               <label className="fieldset-label">Password</label>
-              <input type="password" className="input" placeholder="Password" />
+              <input type="password" className="input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
 
-              <button className="btn btn-neutral mt-4">Login</button>
+              <button type="submit" className="btn btn-neutral mt-4" onClick={handleLogin}>Login</button>
+              {error && <p className="text-red-500">{error}</p>}
             </fieldset>
             {/* Google */}
             <button className="btn bg-white text-black border-[#e5e5e5]">
@@ -52,20 +79,7 @@ export default function UserAuth() {
               </svg>
               Login with Google
             </button>
-          </div>
-          <div className="divider divider-horizontal"></div>
-          <div className="card bg-base-300 rounded-box grid h-100 grow place-items-center">
-            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-              <legend className="fieldset-legend">Register</legend>
-
-              <label className="fieldset-label">Email</label>
-              <input type="email" className="input" placeholder="Email" />
-
-              <label className="fieldset-label">Password</label>
-              <input type="password" className="input" placeholder="Password" />
-
-              <button className="btn btn-neutral mt-4">Register</button>
-            </fieldset>
+            <p>Don't have an account? <a href='/register'>Register here</a></p>
           </div>
         </div>
       </div>
