@@ -54,7 +54,7 @@ try:
                     'user_id INTEGER REFERENCES users(id),'
                     'emoji_id INTEGER NOT NULL REFERENCES emojis(id),'
                     'journal_entry TEXT DEFAULT NULL,'
-                    'sentiment_score FLOAT DEFAULT NULL,'
+                    'sentiment_score FLOAT CHECK (sentiment_score >= -1 AND sentiment score <= 1) DEFAULT NULL,'
                     'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);'
                   )
     print("Mood logs table created successfully.")
