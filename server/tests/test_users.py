@@ -270,15 +270,25 @@ def test_insert_empty_email(client):
 
     args:
       - client: the test client for the Flask app
-      - reset_db: a fixture to reset the database before each test
     asserts:
       - check 'missing required fields' error and 400 status code is raised
-      - user is not inserted into the database
     """
     response = client.post('/register', json={'email': '', 'password': 'testpassword'})
     assert response.status_code == 400
     assert response.get_json() == {'error': 'Missing required fields'}
 
+def test_insert_empty_password(client):
+    """
+    test inserting a user with an empty password into the users table
 
-  # test inserting a user with an empty password (checks CHECK constraint)
+    args:
+      - client: the test client for the Flask app
+    asserts:
+      - check 'missing required fields' error and 400 status code is raised
+    """
+    response = client.post('/register', json={'email': 'test123@test.com', 'password': ''})
+    assert response.status_code == 400
+    assert response.get_json() == {'error': 'Missing required fields'}
+
+
   # test password hashing and verification
