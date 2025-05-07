@@ -39,8 +39,9 @@ try:
                     'email VARCHAR(255) UNIQUE NOT NULL,' 
                     'password VARCHAR(255) NOT NULL,'
                     'OAuth_id VARCHAR(255) DEFAULT NULL,'
-                    'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP),'
-                    'CHECK (OAuth_id IS NOT NULL OR password IS NOT NULL);'
+                    'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
+                    'CHECK (OAuth_id IS NOT NULL OR password IS NOT NULL)'
+                    ');'
                     )
     print("Users table created successfully.")
 
@@ -60,7 +61,7 @@ try:
                     'user_id INTEGER REFERENCES users(id),'
                     'emoji_id INTEGER NOT NULL REFERENCES emojis(id),'
                     'journal_entry TEXT DEFAULT NULL,'
-                    'sentiment_score FLOAT CHECK (sentiment_score >= -1 0 AND sentiment_score <= 1) DEFAULT NULL,'
+                    'sentiment_score FLOAT CHECK (sentiment_score >= -1 AND sentiment_score <= 1) DEFAULT NULL,'
                     'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);'
                   )
     print("Mood logs table created successfully.")
