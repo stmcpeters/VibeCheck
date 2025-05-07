@@ -1,5 +1,9 @@
 import pytest
 import psycopg2
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from app import app
 
 @pytest.fixture 
 def sample_user():
@@ -20,6 +24,28 @@ def sample_users():
     return [
         {'email': 'steph@test.com', 'password': 'password123'},
         {'email': 'bob@test.com', 'password': 'password456'}]
+
+@pytest.fixture
+def duplicate_email_users():
+    """
+    create multiple sample users with a duplicate email for testing
+
+    returns: a dictionary with the test users' email and password
+    """
+    return [
+        {'email': 'dup_email@test.com', 'password': 'password123'},
+        {'email': 'dup_email@test.com', 'password': 'password456'}]
+
+@pytest.fixture
+def client():
+    """
+    create a test client for the Flask app
+
+    returns: a test client for the Flask app
+    """
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
 
 def test_db_connection(db_connection):
     """
@@ -201,8 +227,27 @@ def test_delete_user(db_connection, sample_user):
 
     assert deleted_user is None
 
-# tests to include
-  # test inserting a user with an existing email (checks UNIQUE constraint)
+def test_insert_duplicate_email(client, duplicate_email_users):
+    """
+    test inserting a user with a duplicate email into the users table
+
+    args:
+      - client: the test client for the Flask app
+      - duplicate_email_users: a list of dictionaries with the test users' emails and passwords
+    asserts:
+      - unique constraint error is raised
+      - the first user is inserted into the database
+      - user with duplicate email is not inserted into the database
+    """
+    response = client.post('/register', json=duplicate_email_users[0])
+    assert response.status_code == 200
+    assert response.get_json() == {'message': 'new user has been created!'}
+
+    # try to insert the second user with a duplicate email
+    response = client.post('/register', json=duplicate_email_users[1])
+    assert response.status_code == 400
+    assert response.get_json() == {'error': 'Email already exists'}
+
   # test inserting a user with an empty email  (checks CHECK constraint)
   # test inserting a user with an empty password (checks CHECK constraint)
   # test password hashing and verification
