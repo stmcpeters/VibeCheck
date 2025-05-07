@@ -47,6 +47,21 @@ def client():
     with app.test_client() as client:
         yield client
 
+@pytest.fixture
+def reset_db():
+    connection = psycopg2.connect(
+        host="localhost",
+        database="vibe_check",
+        user=os.environ['DB_USERNAME'],
+        password=os.environ['DB_PASSWORD'],
+        port="5432"
+    )
+    cursor = connection.cursor()
+    cursor.execute('TRUNCATE TABLE users RESTART IDENTITY CASCADE;')
+    connection.commit()
+    cursor.close()
+    connection.close()
+
 def test_db_connection(db_connection):
     """
     test that the database connection is established and active
@@ -227,13 +242,14 @@ def test_delete_user(db_connection, sample_user):
 
     assert deleted_user is None
 
-def test_insert_duplicate_email(client, duplicate_email_users):
+def test_insert_duplicate_email(client, duplicate_email_users, reset_db):
     """
     test inserting a user with a duplicate email into the users table
 
     args:
       - client: the test client for the Flask app
       - duplicate_email_users: a list of dictionaries with the test users' emails and passwords
+      - reset_db: a fixture to reset the database before each test
     asserts:
       - unique constraint error is raised
       - the first user is inserted into the database
