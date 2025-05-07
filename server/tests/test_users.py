@@ -264,6 +264,21 @@ def test_insert_duplicate_email(client, duplicate_email_users, reset_db):
     assert response.status_code == 400
     assert response.get_json() == {'error': 'Email already exists'}
 
-  # test inserting a user with an empty email  (checks CHECK constraint)
+def test_insert_empty_email(client):
+    """
+    test inserting a user with an empty email into the users table
+
+    args:
+      - client: the test client for the Flask app
+      - reset_db: a fixture to reset the database before each test
+    asserts:
+      - check 'missing required fields' error and 400 status code is raised
+      - user is not inserted into the database
+    """
+    response = client.post('/register', json={'email': '', 'password': 'testpassword'})
+    assert response.status_code == 400
+    assert response.get_json() == {'error': 'Missing required fields'}
+
+
   # test inserting a user with an empty password (checks CHECK constraint)
   # test password hashing and verification
