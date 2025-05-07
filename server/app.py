@@ -100,6 +100,11 @@ def add_user():
             connection = get_db_connection()
             cursor = connection.cursor()
 
+            # check if email already exists
+            cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
+            if cursor.fetchone():
+                return jsonify({'error': 'Email already exists'}), 400
+
             # converting password to an array of bytes
             password_bytes = password.encode('utf-8');
             # hashing the password and generating a salt
