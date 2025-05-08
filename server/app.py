@@ -666,45 +666,62 @@ def delete_mood_log(id):
 
 ######################## articles ############################
 
-# fetches all webscraped articles
+# GET: Fetch articles from the database
 @app.route('/articles', methods=['GET'])
-def get_articles():
+def fetch_articles():
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute('SELECT id, title, category, link, author FROM articles;')
+        rows = cursor.fetchall()
+        articles = [
+            {'id': row[0], 'title': row[1], 'category': row[2], 'link': row[3], 'author': row[4]}
+            for row in rows
+        ]
+        cursor.close()
+        connection.close()
+        return jsonify({'articles': articles}), 200
+    except Exception as e:
+        print(f'Error fetching articles: {e}')
+        return jsonify({'articles': []}), 500
+
+# POST: Scrape articles and save to the database
+@app.route('/scrape_articles', methods=['POST'])
+def scrape_articles_route():
     try:
         url = 'https://www.verywellmind.com/self-improvement-4157212'
         response = requests.get(url)
         if response.status_code == requests.codes.ok:
             soup = BeautifulSoup(response.content, 'html.parser')
-
-            # find all elements needed
             titles = soup.find_all('span', class_='card__title-text')
             links = soup.find_all('a', class_="comp mntl-card-list-items mntl-document-card mntl-card card card--no-image")
             categories = soup.find_all('div', class_='card__content')
             authors = soup.find_all('div', class_='card__byline mntl-card__byline')
-
-            # check that all lists are the same length
             if len(titles) == len(categories) == len(links) == len(authors):
-                articles = []
+                connection = get_db_connection()
+                cursor = connection.cursor()
+                cursor.execute('DELETE FROM articles;')
                 for title, category, link, author in zip(titles, categories, links, authors):
-                    # gets attributes and sets default values if not available
                     category_title = category.get('data-tag', None)
                     link_href = link.get('href', None)
                     author_byline = author.get('data-byline', None)
                     if link_href and author_byline:
-                        articles.append({
-                            'title': title.text.strip(),
-                            'category': category_title,
-                            'link': link_href,
-                            'author': author_byline
-                        })
-                return jsonify({'articles': articles}), 200
+                        cursor.execute(
+                            '''INSERT INTO articles (title, category, link, author) VALUES (%s, %s, %s, %s)''',
+                            (title.text.strip(), category_title, link_href, author_byline)
+                        )
+                connection.commit()
+                cursor.close()
+                connection.close()
+                return jsonify({'message': 'Articles scraped and saved!'}), 200
             else:
                 return jsonify({'error': 'Mismatched lengths in scraped data lists'}), 500
         else:
             return jsonify({'error': f'Error fetching data from the URL: {response.status_code}'}), 500
     except Exception as e:
-        print(f'Error web scraping articles: {e}')
+        print(f'Error scraping articles: {e}')
         return jsonify({'error': 'An unexpected error occurred'}), 500
-
+    
 ########################### end of articles ############################
 
 # route for the root URL
