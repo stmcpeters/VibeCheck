@@ -56,12 +56,12 @@ export default function App() {
         const data = response.data.articles;
 
         // transform the data into an array of objects
-        const articles = data.map((article) => ({
-          id: article[0],
-          title: article[1],
-          category: article[2],
-          link: article[3],
-          author: article[4],
+        const articles = data.map((article, index) => ({
+          id: index,
+          title: article.title,
+          category: article.category,
+          link: article.link,
+          author: article.author,
         }));
     
         setArticles(articles);
