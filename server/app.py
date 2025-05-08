@@ -17,11 +17,11 @@ ENV = os.getenv('FLASK_ENV', 'development')
 # set allowed origins based on the environment
 if ENV == 'production':
     allowed_origins = ["https://vibe-check-final.netlify.app"]
-else:  # development env
+else:  # development
     allowed_origins = ["http://localhost:5173"]
 
 # Enable CORS
-cors = CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
 
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
