@@ -21,7 +21,7 @@ export default function App() {
 
     // axios config
     // sets the base URL for axios to the server URL
-    axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+    axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL || 'http://localhost:8080';
     axios.defaults.withCredentials = true;
 
     // function to check if user is logged in using axios from server
