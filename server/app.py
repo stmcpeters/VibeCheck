@@ -16,9 +16,10 @@ app.secret_key = os.environ.get('SECRET_KEY')
 ENV = os.getenv('FLASK_ENV', 'development')
 
 # CORS setup
-allowed_origin = os.environ.get('ALLOWED_ORIGIN')
-print(f'Allowed origin: {allowed_origin}')
-CORS(app, resources={r"/*": {"origins": [allowed_origin]}}, supports_credentials=True)
+# allowed_origin = os.environ.get('ALLOWED_ORIGIN')
+# print(f'Allowed origin: {allowed_origin}')
+# CORS(app, resources={r"/*": {"origins": [allowed_origin]}}, supports_credentials=True)
+CORS(app)
 
 # sets the session cookie name
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
