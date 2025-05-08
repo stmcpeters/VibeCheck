@@ -9,19 +9,28 @@ from bs4 import BeautifulSoup
 # import requests module for HTTP requests
 import requests
 # loads environment variables from a .env file
+# imports and loads environment variables from a .env file
 from dotenv import load_dotenv
+load_dotenv()
 
 # creates Flask app instance
 app = Flask(__name__)
 # sets the secret key for session management
 app.secret_key = os.environ.get('SECRET_KEY')
-# enables cross-origin requests for all routes
-cors = CORS(app, resources={r"/*": {"origins": "https://vibe-check-final.netlify.app/"}}, supports_credentials=True)
+# get the environment (default to 'development')
+ENV = os.getenv('FLASK_ENV', 'development')
 
+# CORS setup
+# allowed_origin = os.environ.get('ALLOWED_ORIGIN')
+# print(f'Allowed origin: {allowed_origin}')
+# CORS(app, resources={r"/*": {"origins": [allowed_origin]}}, supports_credentials=True)
+CORS(app)
+
+# sets the session cookie name
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
 # false if using HTTP for development
-app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_SECURE'] = True if ENV == 'production' else False
 # sets the session type to filesystem
 app.config['SESSION_TYPE'] = 'filesystem'
 # initializes the session
@@ -35,11 +44,12 @@ def get_db_connection():
         # loads environment variables from .env file
         load_dotenv()
         connection = psycopg2.connect(
-            host="localhost",
-            database="vibe_check",
-            user=os.environ['DB_USERNAME'],
-            password=os.environ['DB_PASSWORD'],
-            port="5432")
+            host=os.environ.get('DB_HOST', 'localhost'),
+            database=os.environ.get('DB_NAME', 'vibe_check'),
+            user=os.environ.get('DB_USERNAME', 'postgres'),
+            password=os.environ.get('DB_PASSWORD', ''),
+            port=os.environ.get('DB_PORT', '5432')
+        )
         return connection
     # error handling for connection failure, invalid DB credentials, etc
     except psycopg2.OperationalError as e:
