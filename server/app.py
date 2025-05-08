@@ -26,7 +26,7 @@ CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
 # false if using HTTP for development
-app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_SECURE'] = True if ENV == 'production' else False
 # sets the session type to filesystem
 app.config['SESSION_TYPE'] = 'filesystem'
 # initializes the session
