@@ -19,8 +19,6 @@ ENV = os.getenv('FLASK_ENV', 'development')
 allowed_origin = os.environ.get('ALLOWED_ORIGIN')
 CORS(app, resources={r"/*": {"origins": [allowed_origin]}}, supports_credentials=True)
 
-# session config
-ENV = os.getenv('FLASK_ENV', 'development')
 # sets the session cookie name
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
