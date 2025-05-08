@@ -4,6 +4,10 @@ from flask_session import Session
 import os
 import psycopg2
 import bcrypt
+# import beautifulsoup for web scraping
+from bs4 import BeautifulSoup
+# import requests module for HTTP requests
+import requests
 # loads environment variables from a .env file
 from dotenv import load_dotenv
 
@@ -652,35 +656,44 @@ def delete_mood_log(id):
 
 ######################## articles ############################
 
-# fetches all articles from articles table
+# fetches all webscraped articles
 @app.route('/articles', methods=['GET'])
 def get_articles():
-    connection = None
-    cursor = None
+    try:
+        url = 'https://www.verywellmind.com/self-improvement-4157212'
+        response = requests.get(url)
+        if response.status_code == requests.codes.ok:
+            soup = BeautifulSoup(response.content, 'html.parser')
 
-    try: 
-        connection = get_db_connection()
-        cursor = connection.cursor()
-        cursor.execute('SELECT * FROM articles;')
-        articles = cursor.fetchall()
-        cursor.close()
-        connection.close()
-        return jsonify({'articles': articles}), 200
-    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
-    except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to fetch articles'}), 500
-    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
-    except psycopg2.OperationalError:
-        return jsonify({'error': 'Database connection failed'}), 500
+            # find all elements needed
+            titles = soup.find_all('span', class_='card__title-text')
+            links = soup.find_all('a', class_="comp mntl-card-list-items mntl-document-card mntl-card card card--no-image")
+            categories = soup.find_all('div', class_='card__content')
+            authors = soup.find_all('div', class_='card__byline mntl-card__byline')
+
+            # check that all lists are the same length
+            if len(titles) == len(categories) == len(links) == len(authors):
+                articles = []
+                for title, category, link, author in zip(titles, categories, links, authors):
+                    # gets attributes and sets default values if not available
+                    category_title = category.get('data-tag', None)
+                    link_href = link.get('href', None)
+                    author_byline = author.get('data-byline', None)
+                    if link_href and author_byline:
+                        articles.append({
+                            'title': title.text.strip(),
+                            'category': category_title,
+                            'link': link_href,
+                            'author': author_byline
+                        })
+                return jsonify({'articles': articles}), 200
+            else:
+                return jsonify({'error': 'Mismatched lengths in scraped data lists'}), 500
+        else:
+            return jsonify({'error': f'Error fetching data from the URL: response.status_code'}), 500
     except Exception as e:
-        print(f'Unexpected error: {e}')
+        print(f'Error web scraping articles: {e}')
         return jsonify({'error': 'An unexpected error occurred'}), 500
-    
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
 
 ########################### end of articles ############################
 
