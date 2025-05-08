@@ -690,7 +690,7 @@ def get_articles():
             else:
                 return jsonify({'error': 'Mismatched lengths in scraped data lists'}), 500
         else:
-            return jsonify({'error': f'Error fetching data from the URL: response.status_code'}), 500
+            return jsonify({'error': f'Error fetching data from the URL: {response.status_code}'}), 500
     except Exception as e:
         print(f'Error web scraping articles: {e}')
         return jsonify({'error': 'An unexpected error occurred'}), 500
