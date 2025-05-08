@@ -15,6 +15,7 @@ export default function App() {
   const [response, setResponse] = useState();
   const [mood_logs, setMoodLogs] = useState([]);
   const [articles, setArticles] = useState([]);
+  const [mood_log, setMoodLog] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
@@ -49,26 +50,15 @@ export default function App() {
     }
   }
 
-    // function to fetch articles data using axios from server
+    // this function will be called when the user clicks the button to scrape articles
     const fetchArticles = async () => {
       try {
         const response = await axios.get('/articles');
-        const data = response.data.articles;
-
-        // transform the data into an array of objects
-        const articles = data.map((article, index) => ({
-          id: index,
-          title: article.title,
-          category: article.category,
-          link: article.link,
-          author: article.author,
-        }));
-    
-        setArticles(articles);
+        setArticles(response.data.articles);
       } catch (error) {
-        console.error('Error fetching articles from database:', error);
+        console.error('Error fetching articles from URL:', error);
+      }
     }
-  }
     
     // function to fetch mood logs using axios from server
     const fetchMoodLogs = async () => {
@@ -110,9 +100,6 @@ export default function App() {
       fetchMoodLogs();
     }, []);
 
-    // console.log('isLoggedIn:', isLoggedIn);
-    // console.log('user:', user);
-
   return (
     <>
       <BrowserRouter>
@@ -122,7 +109,7 @@ export default function App() {
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/*" element={<ErrorPage />} />
-          <Route path='/articles' element={<ArticlesList articles={articles} />} />
+          <Route path='/articles' element={<ArticlesList articles={articles} setArticles={setArticles} />} />          
           <Route path='/logs' element={<MoodLogsList mood_logs={mood_logs} />} />
           <Route path='/logout' element={<LogOut setIsLoggedIn={setIsLoggedIn} setUser={setUser}/>} />
         </Routes>
