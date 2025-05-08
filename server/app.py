@@ -4,8 +4,9 @@ from flask_session import Session
 import os
 import psycopg2
 import bcrypt
-# loads environment variables from a .env file
+# imports and loads environment variables from a .env file
 from dotenv import load_dotenv
+load_dotenv()
 
 # creates Flask app instance
 app = Flask(__name__)
@@ -14,15 +15,13 @@ app.secret_key = os.environ.get('SECRET_KEY')
 # get the environment (default to 'development')
 ENV = os.getenv('FLASK_ENV', 'development')
 
-# set allowed origins based on the environment
-if ENV == 'production':
-    allowed_origins = ["https://vibe-check-final.netlify.app"]
-else:  # development
-    allowed_origins = ["http://localhost:5173"]
+# CORS setup
+allowed_origin = os.environ.get('ALLOWED_ORIGIN')
+CORS(app, resources={r"/*": {"origins": [allowed_origin]}}, supports_credentials=True)
 
-# Enable CORS
-CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
-
+# session config
+ENV = os.getenv('FLASK_ENV', 'development')
+# sets the session cookie name
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
 # false if using HTTP for development
