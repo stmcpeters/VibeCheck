@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: articles; Type: TABLE; Schema: public; Owner: steph
+-- Name: articles; Type: TABLE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE TABLE public.articles (
@@ -33,10 +33,10 @@ CREATE TABLE public.articles (
 );
 
 
-ALTER TABLE public.articles OWNER TO steph;
+ALTER TABLE public.articles OWNER TO vibecheck_db_user;
 
 --
--- Name: articles_id_seq; Type: SEQUENCE; Schema: public; Owner: steph
+-- Name: articles_id_seq; Type: SEQUENCE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE SEQUENCE public.articles_id_seq
@@ -48,17 +48,17 @@ CREATE SEQUENCE public.articles_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.articles_id_seq OWNER TO steph;
+ALTER TABLE public.articles_id_seq OWNER TO vibecheck_db_user;
 
 --
--- Name: articles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: steph
+-- Name: articles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER SEQUENCE public.articles_id_seq OWNED BY public.articles.id;
 
 
 --
--- Name: emojis; Type: TABLE; Schema: public; Owner: steph
+-- Name: emojis; Type: TABLE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE TABLE public.emojis (
@@ -68,10 +68,10 @@ CREATE TABLE public.emojis (
 );
 
 
-ALTER TABLE public.emojis OWNER TO steph;
+ALTER TABLE public.emojis OWNER TO vibecheck_db_user;
 
 --
--- Name: emojis_id_seq; Type: SEQUENCE; Schema: public; Owner: steph
+-- Name: emojis_id_seq; Type: SEQUENCE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE SEQUENCE public.emojis_id_seq
@@ -83,17 +83,17 @@ CREATE SEQUENCE public.emojis_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.emojis_id_seq OWNER TO steph;
+ALTER TABLE public.emojis_id_seq OWNER TO vibecheck_db_user;
 
 --
--- Name: emojis_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: steph
+-- Name: emojis_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER SEQUENCE public.emojis_id_seq OWNED BY public.emojis.id;
 
 
 --
--- Name: mood_logs; Type: TABLE; Schema: public; Owner: steph
+-- Name: mood_logs; Type: TABLE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE TABLE public.mood_logs (
@@ -106,10 +106,10 @@ CREATE TABLE public.mood_logs (
 );
 
 
-ALTER TABLE public.mood_logs OWNER TO steph;
+ALTER TABLE public.mood_logs OWNER TO vibecheck_db_user;
 
 --
--- Name: mood_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: steph
+-- Name: mood_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE SEQUENCE public.mood_logs_id_seq
@@ -121,17 +121,17 @@ CREATE SEQUENCE public.mood_logs_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.mood_logs_id_seq OWNER TO steph;
+ALTER TABLE public.mood_logs_id_seq OWNER TO vibecheck_db_user;
 
 --
--- Name: mood_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: steph
+-- Name: mood_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER SEQUENCE public.mood_logs_id_seq OWNED BY public.mood_logs.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: steph
+-- Name: users; Type: TABLE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE TABLE public.users (
@@ -143,10 +143,10 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO steph;
+ALTER TABLE public.users OWNER TO vibecheck_db_user;
 
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: steph
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: vibecheck_db_user
 --
 
 CREATE SEQUENCE public.users_id_seq
@@ -158,45 +158,45 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO steph;
+ALTER TABLE public.users_id_seq OWNER TO vibecheck_db_user;
 
 --
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: steph
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: articles id; Type: DEFAULT; Schema: public; Owner: steph
+-- Name: articles id; Type: DEFAULT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.articles ALTER COLUMN id SET DEFAULT nextval('public.articles_id_seq'::regclass);
 
 
 --
--- Name: emojis id; Type: DEFAULT; Schema: public; Owner: steph
+-- Name: emojis id; Type: DEFAULT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.emojis ALTER COLUMN id SET DEFAULT nextval('public.emojis_id_seq'::regclass);
 
 
 --
--- Name: mood_logs id; Type: DEFAULT; Schema: public; Owner: steph
+-- Name: mood_logs id; Type: DEFAULT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.mood_logs ALTER COLUMN id SET DEFAULT nextval('public.mood_logs_id_seq'::regclass);
 
 
 --
--- Name: users id; Type: DEFAULT; Schema: public; Owner: steph
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
--- Data for Name: emojis; Type: TABLE DATA; Schema: public; Owner: steph
+-- Data for Name: emojis; Type: TABLE DATA; Schema: public; Owner: vibecheck_db_user
 --
 
 COPY public.emojis (id, emoji, label) FROM stdin;
@@ -205,44 +205,37 @@ COPY public.emojis (id, emoji, label) FROM stdin;
 3	☹️	unhappy
 \.
 
---
--- Data for Name: mood_logs; Type: TABLE DATA; Schema: public; Owner: steph
---
-
-COPY public.mood_logs (id, user_id, emoji_id, journal_entry, sentiment_score, created_at) FROM stdin;
-1	1	1	today was a good day! i had a lot of fun building this app!	0.8	2025-04-28 11:02:29.993013
-\.
 
 --
--- Name: articles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: steph
+-- Name: articles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vibecheck_db_user
 --
 
 SELECT pg_catalog.setval('public.articles_id_seq', 70, true);
 
 
 --
--- Name: emojis_id_seq; Type: SEQUENCE SET; Schema: public; Owner: steph
+-- Name: emojis_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vibecheck_db_user
 --
 
 SELECT pg_catalog.setval('public.emojis_id_seq', 3, true);
 
 
 --
--- Name: mood_logs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: steph
+-- Name: mood_logs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vibecheck_db_user
 --
 
 SELECT pg_catalog.setval('public.mood_logs_id_seq', 1, true);
 
 
 --
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: steph
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vibecheck_db_user
 --
 
 SELECT pg_catalog.setval('public.users_id_seq', 1, true);
 
 
 --
--- Name: articles articles_pkey; Type: CONSTRAINT; Schema: public; Owner: steph
+-- Name: articles articles_pkey; Type: CONSTRAINT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.articles
@@ -250,7 +243,7 @@ ALTER TABLE ONLY public.articles
 
 
 --
--- Name: emojis emojis_pkey; Type: CONSTRAINT; Schema: public; Owner: steph
+-- Name: emojis emojis_pkey; Type: CONSTRAINT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.emojis
@@ -258,7 +251,7 @@ ALTER TABLE ONLY public.emojis
 
 
 --
--- Name: mood_logs mood_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: steph
+-- Name: mood_logs mood_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.mood_logs
@@ -266,7 +259,7 @@ ALTER TABLE ONLY public.mood_logs
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: steph
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.users
@@ -274,7 +267,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: mood_logs mood_logs_emoji_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: steph
+-- Name: mood_logs mood_logs_emoji_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.mood_logs
@@ -282,7 +275,7 @@ ALTER TABLE ONLY public.mood_logs
 
 
 --
--- Name: mood_logs mood_logs_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: steph
+-- Name: mood_logs mood_logs_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: vibecheck_db_user
 --
 
 ALTER TABLE ONLY public.mood_logs
