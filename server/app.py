@@ -17,6 +17,7 @@ ENV = os.getenv('FLASK_ENV', 'development')
 
 # CORS setup
 allowed_origin = os.environ.get('ALLOWED_ORIGIN')
+print(f'Allowed origin: {allowed_origin}')
 CORS(app, resources={r"/*": {"origins": [allowed_origin]}}, supports_credentials=True)
 
 # sets the session cookie name
