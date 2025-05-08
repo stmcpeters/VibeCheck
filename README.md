@@ -1,4 +1,4 @@
-# VibeCheck
+# [VibeCheck](https://vibe-check-final.netlify.app/)
 ### Overview
 Many people struggle to track their moods consistently, which prevents them from recognizing emotional patterns and improving mental well-being. VibeCheck simplifies this process with an intuitive emoji-based system, AI-driven insights, and web scraped articles with self-care suggestions.
 ### Project Wireframe
