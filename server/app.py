@@ -12,7 +12,7 @@ app = Flask(__name__)
 # sets the secret key for session management
 app.secret_key = os.environ.get('SECRET_KEY')
 # enables cross-origin requests for all routes
-cors = CORS(app, origins='vibe-check-eta.vercel.app', supports_credentials=True) 
+cors = CORS(app, resources={r"/*": {"origins": "https://vibe-check-final.netlify.app/"}}, supports_credentials=True)
 
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
