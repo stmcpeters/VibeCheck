@@ -1,5 +1,5 @@
 // Display  paginated list of web scraped articles with search and filter options
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import ArticleItem from '../components/ArticleItem'
@@ -49,15 +49,7 @@ export default function ArticlesList({ articles, setArticles }) {
           {loading ? 'Loading...' : 'Load Articles Only'}
         </button>
         {msg && <div>{msg}</div>}
-        <ul>
-          {articles.map((article, idx) => (
-            <li key={idx}>
-              <a href={article.link} target="_blank" rel="noopener noreferrer">{article.title}</a>
-              {article.author && <> by {article.author}</>}
-              {article.category && <> [{article.category}]</>}
-            </li>
-          ))}
-        </ul>
+        <ArticleItem articles={articles} />
       </div>
       <Footer />
     </>
