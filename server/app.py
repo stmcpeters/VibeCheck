@@ -11,8 +11,17 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 # sets the secret key for session management
 app.secret_key = os.environ.get('SECRET_KEY')
-# enables cross-origin requests for all routes
-cors = CORS(app, resources={r"/*": {"origins": "https://vibe-check-final.netlify.app/"}}, supports_credentials=True)
+# get the environment (default to 'development')
+ENV = os.getenv('FLASK_ENV', 'development')
+
+# set allowed origins based on the environment
+if ENV == 'production':
+    allowed_origins = ["https://vibe-check-final.netlify.app"]
+else:  # development env
+    allowed_origins = ["http://localhost:5173"]
+
+# Enable CORS
+cors = CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
 
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
@@ -31,11 +40,12 @@ def get_db_connection():
         # loads environment variables from .env file
         load_dotenv()
         connection = psycopg2.connect(
-            host="localhost",
-            database="vibe_check",
-            user=os.environ['DB_USERNAME'],
-            password=os.environ['DB_PASSWORD'],
-            port="5432")
+            host=os.environ.get('DB_HOST', 'localhost'),
+            database=os.environ.get('DB_NAME', 'vibe_check'),
+            user=os.environ.get('DB_USERNAME', 'postgres'),
+            password=os.environ.get('DB_PASSWORD', ''),
+            port=os.environ.get('DB_PORT', '5432')
+        )
         return connection
     # error handling for connection failure, invalid DB credentials, etc
     except psycopg2.OperationalError as e:
