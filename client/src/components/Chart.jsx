@@ -13,7 +13,7 @@ import {
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
-export default function SentimentChart({ moodLogs }) {
+export default function Chart({ moodLogs }) {
   // Filter mood logs to include only those with a sentiment score
   const filteredLogs = moodLogs.filter((log) => log.sentiment_score !== null);
 
