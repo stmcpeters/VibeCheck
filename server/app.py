@@ -635,32 +635,55 @@ def update_mood_log(id):
     cursor = None
 
     try:
-        if request.method == 'PUT':
+        # Parse the JSON data from the request
+        data = request.get_json()
+        emoji_character = data.get('emoji')  # User inputs the emoji character like 😀
+        new_journal_entry = data.get('journal_entry', None)
 
-            # parse the JSON data
-            data = request.get_json()
-            new_emoji_id = data.get('emoji_id')
-            new_journal_entry = data.get('journal_entry', None)
+        # Validate input
+        if not emoji_character and new_journal_entry is None:
+            return jsonify({"error": "At least one of 'emoji' or 'journal_entry' is required"}), 400
 
-            # validate input
-            if not new_emoji_id:
-                return jsonify({"error": "emoji_id is required"}), 400
+        # Connect to the database
+        connection = get_db_connection()
+        cursor = connection.cursor()
 
-            # connect to database
-            connection = get_db_connection()
-            cursor = connection.cursor()
+        # Get the emoji_id from the emojis table based on the emoji character
+        new_emoji_id = None
+        if emoji_character:
+            cursor.execute('SELECT id FROM emojis WHERE emoji = %s', (emoji_character,))
+            emoji_result = cursor.fetchone()
+            if not emoji_result:
+                return jsonify({"error": f"Emoji '{emoji_character}' not found"}), 400
+            new_emoji_id = emoji_result[0]
 
-            # query to update an existing mood log
-            # handles adding a journal entry to an existing mood log
-            if new_journal_entry is not None:
-                cursor.execute('''UPDATE mood_logs SET emoji_id = %s, journal_entry = %s WHERE id = %s''', (new_emoji_id, new_journal_entry, id))
-            # updates the emoji associated with the mood log only
-            else:
-                cursor.execute('''UPDATE mood_logs SET emoji_id = %s WHERE id = %s''', (new_emoji_id, id))
+        # Build the SQL query dynamically based on the provided fields
+        update_fields = []
+        update_values = []
 
-            # commit changes
-            connection.commit()
-            return jsonify({'message': 'Mood log has been updated!'}), 200
+        if new_emoji_id is not None:
+            update_fields.append("emoji_id = %s")
+            update_values.append(new_emoji_id)
+
+        if new_journal_entry is not None:
+            update_fields.append("journal_entry = %s")
+            update_values.append(new_journal_entry)
+
+        # Add the id to the values list for the WHERE clause
+        update_values.append(id)
+
+        # Construct and execute the SQL query
+        update_query = f"UPDATE mood_logs SET {', '.join(update_fields)} WHERE id = %s"
+        cursor.execute(update_query, tuple(update_values))
+
+        # Commit the changes
+        connection.commit()
+
+        # Close the database connection
+        cursor.close()
+        connection.close()
+
+        return jsonify({'message': 'Mood log has been updated!'}), 200
 
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
