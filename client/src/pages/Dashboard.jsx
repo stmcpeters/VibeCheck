@@ -10,6 +10,7 @@ import MoodLogItem from "../components/MoodLogItem"
 
 export default function Dashboard({ userId, mood_logs, articles }) {
   const [loadingArticles, setLoadingArticles] = useState(true);
+  const [loadingMoodLogs, setLoadingMoodLogs] = useState(true);
 
   // creates variable to hold the 2 most recent mood logs to be displayed on the dashboard
   const sortedMoodLogs = mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2);
@@ -23,6 +24,13 @@ export default function Dashboard({ userId, mood_logs, articles }) {
     setLoadingArticles(false);
   }
 }, [articles]);
+
+  // useEffect to set loadingMoodLogs to false after mood logs are loaded
+  useEffect(() => {
+  if (mood_logs.length > 0) {
+    setLoadingMoodLogs(false);
+  }
+}, [mood_logs]);
   
   return (
     <>
@@ -53,7 +61,11 @@ export default function Dashboard({ userId, mood_logs, articles }) {
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-100 grow place-items-center">
           <h1>Recent Mood Logs</h1>
-          <MoodLogItem mood_logs={sortedMoodLogs} />
+          {loadingMoodLogs ? (
+            <p>Loading mood logs...</p>
+          ):(
+          <MoodLogItem mood_logs={sortedMoodLogs} />)
+          }
         </div>
       </div>
       <Footer />
