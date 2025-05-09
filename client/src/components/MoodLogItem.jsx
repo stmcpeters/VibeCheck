@@ -28,7 +28,8 @@ export default function MoodLogItem({ mood_logs }) {
                   <td>{new Date(mood_log.created_at).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}</td>
                   <td>{mood_log.emoji}</td>
                   <td>{mood_log.journal_entry}</td>
-                  <td>{mood_log.sentiment_score}</td>
+                  {/* if sentiment score is not available or null, N/A will be a placeholder */}
+                  <td>{mood_log.sentiment_score !== null ? mood_log.sentiment_score : 'N/A'}</td>
                   <td className='pr-5 pl-5'>
                     <button className="btn btn-square">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>

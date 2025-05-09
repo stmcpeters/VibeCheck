@@ -5,8 +5,14 @@ from openai import OpenAI
 import os
 import psycopg2
 import bcrypt
+# import beautifulsoup for web scraping
+from bs4 import BeautifulSoup
+# import requests module for HTTP requests
+import requests
 # loads environment variables from a .env file
+# imports and loads environment variables from a .env file
 from dotenv import load_dotenv
+load_dotenv()
 
 load_dotenv()
 
@@ -19,13 +25,33 @@ client = OpenAI(
 app = Flask(__name__)
 # sets the secret key for session management
 app.secret_key = os.environ.get('SECRET_KEY')
-# enables cross-origin requests for all routes
-cors = CORS(app, origins='http://localhost:5173', supports_credentials=True) 
+# get the environment (default to 'development')
+ENV = os.getenv('FLASK_ENV', 'development')
 
+# Dynamically set allowed origins based on environment
+allowed_origins = [
+    "http://localhost:5173",  # Frontend development URL
+    "https://vibe-check-final.netlify.app"  # Frontend production URL
+]
+
+# Configure CORS
+CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
+
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get('Origin')
+    if origin in allowed_origins:
+        response.headers['Access-Control-Allow-Origin'] = origin
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
+# sets the session cookie name
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'
 # true if using HTTPS for production
 # false if using HTTP for development
-app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_SECURE'] = True if ENV == 'production' else False
 # sets the session type to filesystem
 app.config['SESSION_TYPE'] = 'filesystem'
 # initializes the session
@@ -39,11 +65,12 @@ def get_db_connection():
         # loads environment variables from .env file
         load_dotenv()
         connection = psycopg2.connect(
-            host="localhost",
-            database="vibe_check",
-            user=os.environ['DB_USERNAME'],
-            password=os.environ['DB_PASSWORD'],
-            port="5432")
+            host=os.environ.get('DB_HOST', 'localhost'),
+            database=os.environ.get('DB_NAME', 'vibe_check'),
+            user=os.environ.get('DB_USERNAME', 'postgres'),
+            password=os.environ.get('DB_PASSWORD', ''),
+            port=os.environ.get('DB_PORT', '5432')
+        )
         return connection
     # error handling for connection failure, invalid DB credentials, etc
     except psycopg2.OperationalError as e:
@@ -680,36 +707,62 @@ def delete_mood_log(id):
 
 ######################## articles ############################
 
-# fetches all articles from articles table
+# GET: Fetch articles from the database
 @app.route('/articles', methods=['GET'])
-def get_articles():
-    connection = None
-    cursor = None
-
-    try: 
+def fetch_articles():
+    try:
         connection = get_db_connection()
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM articles;')
-        articles = cursor.fetchall()
+        cursor.execute('SELECT id, title, category, link, author FROM articles;')
+        rows = cursor.fetchall()
+        articles = [
+            {'id': row[0], 'title': row[1], 'category': row[2], 'link': row[3], 'author': row[4]}
+            for row in rows
+        ]
         cursor.close()
         connection.close()
         return jsonify({'articles': articles}), 200
-    # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
-    except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to fetch articles'}), 500
-    # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
-    except psycopg2.OperationalError:
-        return jsonify({'error': 'Database connection failed'}), 500
     except Exception as e:
-        print(f'Unexpected error: {e}')
+        print(f'Error fetching articles: {e}')
+        return jsonify({'articles': []}), 500
+
+# POST: Scrape articles and save to the database
+@app.route('/scrape_articles', methods=['POST'])
+def scrape_articles_route():
+    try:
+        url = 'https://www.verywellmind.com/self-improvement-4157212'
+        response = requests.get(url)
+        if response.status_code == requests.codes.ok:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            titles = soup.find_all('span', class_='card__title-text')
+            links = soup.find_all('a', class_="comp mntl-card-list-items mntl-document-card mntl-card card card--no-image")
+            categories = soup.find_all('div', class_='card__content')
+            authors = soup.find_all('div', class_='card__byline mntl-card__byline')
+            if len(titles) == len(categories) == len(links) == len(authors):
+                connection = get_db_connection()
+                cursor = connection.cursor()
+                cursor.execute('DELETE FROM articles;')
+                for title, category, link, author in zip(titles, categories, links, authors):
+                    category_title = category.get('data-tag', None)
+                    link_href = link.get('href', None)
+                    author_byline = author.get('data-byline', None)
+                    if link_href and author_byline:
+                        cursor.execute(
+                            '''INSERT INTO articles (title, category, link, author) VALUES (%s, %s, %s, %s)''',
+                            (title.text.strip(), category_title, link_href, author_byline)
+                        )
+                connection.commit()
+                cursor.close()
+                connection.close()
+                return jsonify({'message': 'Articles scraped and saved!'}), 200
+            else:
+                return jsonify({'error': 'Mismatched lengths in scraped data lists'}), 500
+        else:
+            return jsonify({'error': f'Error fetching data from the URL: {response.status_code}'}), 500
+    except Exception as e:
+        print(f'Error scraping articles: {e}')
         return jsonify({'error': 'An unexpected error occurred'}), 500
     
-    finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
-
 ########################### end of articles ############################
 
 # route for the root URL

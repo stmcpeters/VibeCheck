@@ -16,7 +16,6 @@ export default function ArticleItem({articles}) {
               <th>Category</th>
               <th>Article Title</th>
               <th>Author</th>
-              <th colSpan={2}>Actions</th>
             </tr>
           </thead>
           <tbody>

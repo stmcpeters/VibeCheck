@@ -11,18 +11,21 @@ import ArticlesList from './pages/ArticlesList'
 import MoodLogsList from './pages/MoodLogsList'
 import LogOut from './pages/LogOut'
 
-
 export default function App() {
   const [response, setResponse] = useState();
   const [mood_logs, setMoodLogs] = useState([]);
   const [articles, setArticles] = useState([]);
+  const [mood_log, setMoodLog] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
-    // axios config
-    // sets the base URL for axios to the server URL
-    axios.defaults.baseURL = 'http://localhost:8080/';
-    axios.defaults.withCredentials = true;
+// Dynamically set the base URL based on the environment
+axios.defaults.baseURL =
+  import.meta.env.MODE === 'development'
+    ? 'http://127.0.0.1:8080' // Backend development URL
+    : 'https://vibecheck-iqj9.onrender.com'; // Backend production URL
+
+axios.defaults.withCredentials = true; // Include credentials (cookies)
 
     // function to check if user is logged in using axios from server
     const checkLoggedIn = async () => {
@@ -49,26 +52,15 @@ export default function App() {
     }
   }
 
-    // function to fetch articles data using axios from server
+    // this function will be called when the user clicks the button to scrape articles
     const fetchArticles = async () => {
       try {
         const response = await axios.get('/articles');
-        const data = response.data.articles;
-
-        // transform the data into an array of objects
-        const articles = data.map((article) => ({
-          id: article[0],
-          title: article[1],
-          category: article[2],
-          link: article[3],
-          author: article[4],
-        }));
-    
-        setArticles(articles);
+        setArticles(response.data.articles);
       } catch (error) {
-        console.error('Error fetching articles from database:', error);
+        console.error('Error fetching articles from URL:', error);
+      }
     }
-  }
     
     // function to fetch mood logs using axios from server
     const fetchMoodLogs = async () => {
@@ -110,9 +102,6 @@ export default function App() {
       fetchMoodLogs();
     }, []);
 
-    // console.log('isLoggedIn:', isLoggedIn);
-    // console.log('user:', user);
-
   return (
     <>
       <BrowserRouter>
@@ -122,7 +111,7 @@ export default function App() {
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/*" element={<ErrorPage />} />
-          <Route path='/articles' element={<ArticlesList articles={articles} />} />
+          <Route path='/articles' element={<ArticlesList articles={articles} setArticles={setArticles} />} />          
           <Route path='/logs' element={<MoodLogsList mood_logs={mood_logs} />} />
           <Route path='/logout' element={<LogOut setIsLoggedIn={setIsLoggedIn} setUser={setUser}/>} />
         </Routes>

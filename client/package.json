@@ -21,6 +21,7 @@
     "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
+    "@dotenv-run/vite": "^1.0.0",
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
