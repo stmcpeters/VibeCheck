@@ -57,7 +57,17 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
         {loading ? (
           <p>Loading mood logs...</p>
         ) : (
-          <MoodLogItem mood_logs={currentMoodLogs} onDelete={handleDelete} onUpdate={handleUpdate}/>
+          <MoodLogItem
+            mood_logs={currentMoodLogs}
+            onDelete={(id) => {
+              console.log('handleDelete called with id:', id);
+              handleDelete(id);
+            }}
+            onUpdate={(updatedLog) => {
+              console.log('handleUpdate called with updatedLog:', updatedLog);
+              handleUpdate(updatedLog);
+            }}
+          />
         )}
         {/* Pagination */}
         <div className="join">
