@@ -1,11 +1,16 @@
 // Displays paginated list of previous mood entries with search and filter options
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import MoodLogItem from '../components/MoodLogItem'
 
 export default function MoodLogsList({ mood_logs }) {
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset currentPage to 1 when mood_logs changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [mood_logs]);
   const logsPerPage = 5;
 
   // Calculate the current mood logs to display
