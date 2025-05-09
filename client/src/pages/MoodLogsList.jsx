@@ -4,8 +4,9 @@ import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import MoodLogItem from '../components/MoodLogItem'
 
-export default function MoodLogsList({ mood_logs }) {
+export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [mood_logs, setMoodLogs] = useState(initialMoodLogs);
 
   // Reset currentPage to 1 when mood_logs changes
   useEffect(() => {
@@ -27,12 +28,26 @@ export default function MoodLogsList({ mood_logs }) {
     }
   };
 
+  const handleDelete = (id) => {
+    setMoodLogs(mood_logs.filter((log) => log.id !== id)); 
+  };
+
+  const handleUpdate = (id, updatedEmojiId, updatedJournalEntry) => {
+    setMoodLogs(
+      mood_logs.map((log) =>
+        log.id === id
+          ? { ...log, emoji_id: updatedEmojiId, journal_entry: updatedJournalEntry }
+          : log
+      )
+    );
+  };
+
   return (
     <>
       <NavBar />
       <div className='place-items-center'>
         <div className='grow text-2xl'>List of Mood Logs</div>
-        <MoodLogItem mood_logs={currentMoodLogs} />
+        <MoodLogItem mood_logs={currentMoodLogs} onDelete={handleDelete} onUpdate={handleUpdate}/>
         {/* Pagination */}
         <div className="join">
           <button
