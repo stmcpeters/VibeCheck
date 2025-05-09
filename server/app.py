@@ -538,15 +538,28 @@ def add_mood_log():
                     instructions="You are a sentiment analysis assistant. Analyze the sentiment of the following text and only return a score between -1 (very negative) and 1 (very positive).",
                     input=journal_entry
                     )
-                    sentiment_score = response.output[0].content[0].text
-                    return sentiment_score
+                    sentiment_score_text = response.output[0].content[0].text
+                    # Convert the sentiment score to a float
+                    sentiment_score = float(sentiment_score_text)
+                    # Validate that the score is within the range of -1 to 1
+                    if -1 <= sentiment_score <= 1:
+                        return sentiment_score
+                    else:
+                        raise ValueError(f"Sentiment score {sentiment_score} is out of range.")
+                except (ValueError, TypeError) as e:
+                    print(f"Error: Invalid sentiment score - {e}")
+                    return None
                 except Exception as e:
                     print(f"Error: {e}")
+                    return None
 
             # if the journal entry is not None, get the sentiment score
             if journal_entry is not None:
                 # sets the sentiment score equal to the sentiment score from the OpenAI API
                 sentiment_score = get_sentiment(journal_entry) 
+                # If the sentiment score is invalid, return an error
+                if sentiment_score is None:
+                    return jsonify({'error': 'Invalid sentiment score'}), 400
             # if the journal entry is None, set the sentiment score to None
             else:
                 sentiment_score = None
