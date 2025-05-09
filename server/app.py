@@ -687,14 +687,16 @@ def update_mood_log(id):
 
     # error handling for SQL syntax errors, invalid table/columns, incorrect data types, etc
     except psycopg2.ProgrammingError:
-        return jsonify({'error': 'Failed to update mood log'}), 500
+            print(f"ProgrammingError: {e}")
+            return jsonify({'error': 'Failed to update mood log', 'details': str(e)}), 500
     # error handling for connection failure, invalid DB name/credentials, networking issues, etc.
     except psycopg2.OperationalError:
-        return jsonify({'error': 'Database connection failed'}), 500
+        print(f"OperationalError: {e}")
+        return jsonify({'error': 'Database connection failed', 'details': str(e)}), 500
     # will catch any other errors
     except Exception as e:
         print(f'Error updating mood log in the database: {e}')
-        return jsonify({'error': 'An unexpected error occurred'}), 500
+        return jsonify({'error': 'An unexpected error occurred', 'details': str(e)}), 500
 
     finally:
         if cursor:
