@@ -8,6 +8,8 @@ import axios from 'axios'
 export default function ArticlesList({ articles, setArticles }) {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 5;
 
   // Fetch articles from DB
   const fetchArticles = async () => {
@@ -37,6 +39,20 @@ export default function ArticlesList({ articles, setArticles }) {
     setLoading(false);
   };
 
+  // Calculate the current articles to display
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
+
+    // Calculate total pages
+  const totalPages = Math.ceil(articles.length / articlesPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <>
       <NavBar />
@@ -49,7 +65,27 @@ export default function ArticlesList({ articles, setArticles }) {
           {loading ? 'Loading...' : 'Load Articles Only'}
         </button>
         {msg && <div>{msg}</div>}
-        <ArticleItem articles={articles} />
+        <ArticleItem articles={currentArticles} />
+        {/* Pagination */}
+        <div className="join">
+          <button
+            className="join-item btn"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            «
+          </button>
+          <span className="join-item btn btn-disabled">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="join-item btn"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            »
+          </button>
+        </div>
       </div>
       <Footer />
     </>
