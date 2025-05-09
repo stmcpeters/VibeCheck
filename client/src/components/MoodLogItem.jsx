@@ -25,7 +25,6 @@ export default function MoodLogItem({ mood_logs, onDelete, onUpdate }) {
     }
   };
 
-  // handle update
   const handleUpdate = async (id) => {
     try {
       if (!updatedEmojiId || !updatedJournalEntry) {
@@ -33,13 +32,14 @@ export default function MoodLogItem({ mood_logs, onDelete, onUpdate }) {
         return;
       }
 
-      await axios.put(`/update_mood_log/${id}`, {
+      const response = await axios.put(`/update_mood_log/${id}`, {
         emoji_id: updatedEmojiId,
         journal_entry: updatedJournalEntry,
       });
 
-      onUpdate(id, updatedEmojiId, updatedJournalEntry); 
-      setEditingLog(null); 
+      const updatedLog = response.data; // Assuming the backend returns the updated log
+      onUpdate(updatedLog); // Pass the updated log to the parent component
+      setEditingLog(null); // Exit edit mode
     } catch (error) {
       console.error('Error updating mood log:', error);
       alert('Failed to update mood log. Please try again.');

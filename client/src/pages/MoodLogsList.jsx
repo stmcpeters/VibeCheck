@@ -13,6 +13,7 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
   useEffect(() => {
     setCurrentPage(1);
   }, [mood_logs]);
+
   const logsPerPage = 5;
 
     // useEffect to set loadingMoodLogs to false after mood logs are loaded
@@ -40,12 +41,10 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
     setMoodLogs(mood_logs.filter((log) => log.id !== id)); 
   };
 
-  const handleUpdate = (id, updatedEmojiId, updatedJournalEntry) => {
+  const handleUpdate = (updatedLog) => {
     setMoodLogs(
       mood_logs.map((log) =>
-        log.id === id
-          ? { ...log, emoji_id: updatedEmojiId, journal_entry: updatedJournalEntry }
-          : log
+        log.id === updatedLog.id ? updatedLog : log
       )
     );
   };
