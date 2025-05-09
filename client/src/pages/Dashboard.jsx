@@ -41,7 +41,7 @@ export default function Dashboard({ userId, mood_logs, articles }) {
       <br />
       <div className="flex w-full">
         <div className="card rounded-box grid h-100 grow place-items-center">
-          <Chart />
+          <Chart moodLogs={mood_logs}/>
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-150 grow place-items-center">
