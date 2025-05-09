@@ -11,6 +11,11 @@ export default function ArticlesList({ articles, setArticles }) {
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 5;
 
+  // Reset currentPage to 1 when articles change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [articles]);
+  
   // Fetch articles from DB
   const fetchArticles = async () => {
     setLoading(true);
