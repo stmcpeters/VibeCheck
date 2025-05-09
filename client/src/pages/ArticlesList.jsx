@@ -1,5 +1,5 @@
 // Display  paginated list of web scraped articles with search and filter options
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import ArticleItem from '../components/ArticleItem'
