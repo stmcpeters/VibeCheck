@@ -5,6 +5,7 @@ import Footer from '../components/Footer'
 import MoodLogItem from '../components/MoodLogItem'
 
 export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [mood_logs, setMoodLogs] = useState(initialMoodLogs);
 
@@ -13,6 +14,13 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
     setCurrentPage(1);
   }, [mood_logs]);
   const logsPerPage = 5;
+
+    // useEffect to set loadingMoodLogs to false after mood logs are loaded
+    useEffect(() => {
+    if (mood_logs.length > 0) {
+      setLoading(false);
+    }
+  }, [mood_logs]);
 
   // Calculate the current mood logs to display
   const indexOfLastLog = currentPage * logsPerPage;
@@ -47,7 +55,11 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
       <NavBar />
       <div className='place-items-center'>
         <div className='grow text-2xl'>List of Mood Logs</div>
-        <MoodLogItem mood_logs={currentMoodLogs} onDelete={handleDelete} onUpdate={handleUpdate}/>
+        {loading ? (
+          <p>Loading mood logs...</p>
+        ) : (
+          <MoodLogItem mood_logs={currentMoodLogs} onDelete={handleDelete} onUpdate={handleUpdate}/>
+        )}
         {/* Pagination */}
         <div className="join">
           <button
