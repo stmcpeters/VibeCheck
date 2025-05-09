@@ -14,8 +14,6 @@ import requests
 from dotenv import load_dotenv
 load_dotenv()
 
-load_dotenv()
-
 # Set OpenAI API key
 client = OpenAI(
     api_key = os.getenv("OPENAI_API_KEY")
