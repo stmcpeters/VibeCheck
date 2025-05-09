@@ -8,7 +8,7 @@ import Chart from "../components/Chart"
 import ArticleItem from "../components/ArticleItem"
 import MoodLogItem from "../components/MoodLogItem"
 
-export default function Dashboard({ mood_logs, articles }) {
+export default function Dashboard({ userId, mood_logs, articles }) {
   const [loadingArticles, setLoadingArticles] = useState(true);
 
   // creates variable to hold the 2 most recent mood logs to be displayed on the dashboard
@@ -37,7 +37,7 @@ export default function Dashboard({ mood_logs, articles }) {
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="card rounded-box grid h-150 grow place-items-center">
-          <MoodForm />
+          <MoodForm userId={userId} onSuccess={() => console.log('Mood log saved!')} />
         </div>
       </div>
       <hr />
