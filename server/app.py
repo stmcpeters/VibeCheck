@@ -20,11 +20,24 @@ app.secret_key = os.environ.get('SECRET_KEY')
 # get the environment (default to 'development')
 ENV = os.getenv('FLASK_ENV', 'development')
 
-# CORS setup
-# allowed_origin = os.environ.get('ALLOWED_ORIGIN')
-# print(f'Allowed origin: {allowed_origin}')
-# CORS(app, resources={r"/*": {"origins": [allowed_origin]}}, supports_credentials=True)
-CORS(app)
+# Dynamically set allowed origins based on environment
+allowed_origins = [
+    "http://localhost:5173",  # Frontend development URL
+    "https://vibe-check-final.netlify.app"  # Frontend production URL
+]
+
+# Configure CORS
+CORS(app, resources={r"/*": {"origins": allowed_origins}}, supports_credentials=True)
+
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get('Origin')
+    if origin in allowed_origins:
+        response.headers['Access-Control-Allow-Origin'] = origin
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 
 # sets the session cookie name
 app.config['SESSION_COOKIE_SAME_SITE'] = 'None'

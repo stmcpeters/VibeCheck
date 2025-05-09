@@ -19,11 +19,13 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
-    // axios config
-    // sets the base URL for axios to the server URL
-    axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
-    // || 'http://localhost:8080';
-    // axios.defaults.withCredentials = true;
+// Dynamically set the base URL based on the environment
+axios.defaults.baseURL =
+  import.meta.env.MODE === 'development'
+    ? 'http://127.0.0.1:8080' // Backend development URL
+    : 'https://vibecheck-iqj9.onrender.com'; // Backend production URL
+
+axios.defaults.withCredentials = true; // Include credentials (cookies)
 
     // function to check if user is logged in using axios from server
     const checkLoggedIn = async () => {
