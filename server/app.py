@@ -657,6 +657,35 @@ def update_mood_log(id):
                 return jsonify({"error": f"Emoji '{emoji_character}' not found"}), 400
             new_emoji_id = emoji_result[0]
 
+        # Recalculate sentiment score if journal entry is updated
+        new_sentiment_score = None
+        if new_journal_entry is not None:
+            # Function to calculate sentiment score
+            def get_sentiment(journal_entry):
+                try:
+                    response = client.responses.create(
+                        model="gpt-4o",
+                        instructions="You are a sentiment analysis assistant. Analyze the sentiment of the following text and only return a score between -1 (very negative) and 1 (very positive).",
+                        input=journal_entry
+                    )
+                    sentiment_score_text = response.output[0].content[0].text
+                    sentiment_score = float(sentiment_score_text)
+                    if -1 <= sentiment_score <= 1:
+                        return sentiment_score
+                    else:
+                        raise ValueError(f"Sentiment score {sentiment_score} is out of range.")
+                except (ValueError, TypeError) as e:
+                    print(f"Error: Invalid sentiment score - {e}")
+                    return None
+                except Exception as e:
+                    print(f"Error: {e}")
+                    return None
+
+            # Calculate the sentiment score
+            new_sentiment_score = get_sentiment(new_journal_entry)
+            if new_sentiment_score is None:
+                return jsonify({'error': 'Failed to calculate sentiment score'}), 400
+
         # Build the SQL query dynamically based on the provided fields
         update_fields = []
         update_values = []
@@ -668,6 +697,10 @@ def update_mood_log(id):
         if new_journal_entry is not None:
             update_fields.append("journal_entry = %s")
             update_values.append(new_journal_entry)
+
+        if new_sentiment_score is not None:
+            update_fields.append("sentiment_score = %s")
+            update_values.append(new_sentiment_score)
 
         # Add the id to the values list for the WHERE clause
         update_values.append(id)
