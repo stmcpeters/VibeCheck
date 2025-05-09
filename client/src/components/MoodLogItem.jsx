@@ -3,6 +3,10 @@ import React, { useState } from 'react'
 import axios from 'axios';
 
 export default function MoodLogItem({ mood_logs, onDelete, onUpdate }) {
+  console.log('onUpdate prop', onUpdate);
+  console.log('onDelete prop', onDelete);
+
+  
   const [editingLog, setEditingLog] = useState(null); // Track the log being edited
   const [updatedEmojiId, setUpdatedEmojiId] = useState(null);
   const [updatedJournalEntry, setUpdatedJournalEntry] = useState('');
