@@ -35,10 +35,10 @@ export default function Dashboard({ userId, mood_logs, articles }) {
   return (
     <>
       <NavBar />
-      <SearchBar />
+      {/* <SearchBar />
       <br />
       <hr />
-      <br />
+      <br /> */}
       <div className="flex w-full">
         <div className="card rounded-box grid h-100 grow place-items-center">
           <Chart moodLogs={mood_logs}/>
