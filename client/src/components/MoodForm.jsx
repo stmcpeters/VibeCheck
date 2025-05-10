@@ -72,7 +72,6 @@ export default function MoodForm({ userId, onSuccess }) {
               </div>
             </fieldset>
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">This is an AI generated journal prompt</legend>
               <textarea 
                 className="textarea h-24" 
                 placeholder="Enter your entry here" 
