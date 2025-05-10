@@ -61,17 +61,17 @@ export default function ArticlesList({ articles, setArticles }) {
     <>
       <NavBar />
       <div className='place-items-center'>
-        <div className='grow text-2xl'>List of Articles</div>
-        <button className="btn btn-primary mb-4" onClick={handleScrape} disabled={loading}>
+        <div className='grow text-2xl pt-10'>List of Articles</div>
+        <button className="btn btn-primary mb-4 mt-5" onClick={handleScrape} disabled={loading}>
           {loading ? 'Working...' : 'Scrape & Load Latest Articles'}
         </button>
-        <button className="btn btn-secondary mb-4 ml-2" onClick={fetchArticles} disabled={loading}>
+        {/* <button className="btn btn-secondary mb-4 ml-2" onClick={fetchArticles} disabled={loading}>
           {loading ? 'Loading...' : 'Load Articles Only'}
-        </button>
+        </button> */}
         {msg && <div>{msg}</div>}
         <ArticleItem articles={currentArticles} />
         {/* Pagination */}
-        <div className="join">
+        <div className="join mt-10">
           <button
             className="join-item btn"
             onClick={() => handlePageChange(currentPage - 1)}
