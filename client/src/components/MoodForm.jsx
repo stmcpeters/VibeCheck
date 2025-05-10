@@ -40,11 +40,11 @@ export default function MoodForm({ userId, onSuccess }) {
   };
   return (
     <>
-      <div className="card bg-primary text-primary-content w-96">
+      <div className="card bg-primary text-primary-content w-110">
         <div className="card-body">
           <h2 className="card-title">How are you feeling today?</h2>
           <form onSubmit={handleSubmit}>
-            <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+            <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-s border p-4">
               <div className="join heading">
                 <button
                 type="button"
@@ -71,7 +71,7 @@ export default function MoodForm({ userId, onSuccess }) {
             </fieldset>
             <fieldset className="fieldset">
               <textarea 
-                className="textarea h-24" 
+                className="textarea h-24 w-full textarea-bordered" 
                 placeholder="Enter your entry here" 
                 value={journalEntry}
                 onChange={(e) => setJournalEntry(e.target.value)}
