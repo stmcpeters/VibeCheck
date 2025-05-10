@@ -1,7 +1,6 @@
 // log out successful page
 import axios from 'axios'
 import React, { useEffect } from 'react'
-import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
 
 export default function LogOut({ setIsLoggedIn, setUser }) {
@@ -40,7 +39,6 @@ export default function LogOut({ setIsLoggedIn, setUser }) {
             </div>
           </div>
         </div>
-      <Footer />
     </>
   )
 }

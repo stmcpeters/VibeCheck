@@ -1,7 +1,6 @@
 // Landing page after login. Displays current mood prompt, mood streaks, and Tableau chart
 import React, { useState, useEffect } from "react"
 import NavBar from "../components/NavBar"
-import Footer from "../components/Footer"
 import MoodForm from "../components/MoodForm"
 import SearchBar from "../components/SearchBar"
 import Chart from "../components/Chart"
@@ -68,7 +67,6 @@ export default function Dashboard({ userId, mood_logs, articles }) {
           }
         </div>
       </div>
-      <Footer />
     </>
   )
 }

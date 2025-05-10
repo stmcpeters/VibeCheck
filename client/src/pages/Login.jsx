@@ -1,7 +1,6 @@
 // Forms for email/password login and registration. Includes OAuth Google login button and CAPTCHA checkbox
 import React, { useState } from "react";
 import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -83,7 +82,6 @@ export default function UserAuth() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }
