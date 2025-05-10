@@ -1,7 +1,6 @@
 // Display  paginated list of web scraped articles with search and filter options
 import React, { useState, useEffect } from 'react'
 import NavBar from '../components/NavBar'
-import Footer from '../components/Footer'
 import ArticleItem from '../components/ArticleItem'
 import axios from 'axios'
 
@@ -62,17 +61,17 @@ export default function ArticlesList({ articles, setArticles }) {
     <>
       <NavBar />
       <div className='place-items-center'>
-        <div className='grow text-2xl'>List of Articles</div>
-        <button className="btn btn-primary mb-4" onClick={handleScrape} disabled={loading}>
+        <div className='grow text-2xl pt-10'>List of Articles</div>
+        <button className="btn btn-primary mb-4 mt-5" onClick={handleScrape} disabled={loading}>
           {loading ? 'Working...' : 'Scrape & Load Latest Articles'}
         </button>
-        <button className="btn btn-secondary mb-4 ml-2" onClick={fetchArticles} disabled={loading}>
+        {/* <button className="btn btn-secondary mb-4 ml-2" onClick={fetchArticles} disabled={loading}>
           {loading ? 'Loading...' : 'Load Articles Only'}
-        </button>
+        </button> */}
         {msg && <div>{msg}</div>}
         <ArticleItem articles={currentArticles} />
         {/* Pagination */}
-        <div className="join">
+        <div className="join mt-10">
           <button
             className="join-item btn"
             onClick={() => handlePageChange(currentPage - 1)}
@@ -92,7 +91,6 @@ export default function ArticlesList({ articles, setArticles }) {
           </button>
         </div>
       </div>
-      <Footer />
     </>
   )
 }

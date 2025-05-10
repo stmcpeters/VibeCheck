@@ -1,6 +1,5 @@
 import React from 'react'
 import NavBar from '../components/NavBar'
-import Footer from '../components/Footer'
 import { useState } from 'react'
 import axios from 'axios'
 
@@ -40,7 +39,7 @@ export default function Register() {
               <label className="fieldset-label">Password</label>
               <input type="password" className="input" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
 
-              <button type="submit" className="btn btn-neutral mt-4" onClick={handleRegister}>Register</button>
+              <button type="submit" className="btn btn-primary mt-4" onClick={handleRegister}>Register</button>
               {error && <p className="text-red-500">{error}</p>}
               {message && <p className="text-green-500">{message}</p>}
             </fieldset>
@@ -79,7 +78,6 @@ export default function Register() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   )
 }

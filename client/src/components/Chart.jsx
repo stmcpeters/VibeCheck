@@ -29,12 +29,12 @@ export default function Chart({ moodLogs }) {
       {
         label: 'Sentiment Score',
         data: filteredLogs.map((log) => log.sentiment_score),
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'pink',
+        backgroundColor: 'pink',
         borderWidth: 2,
         tension: 0.4, // Smooth curve
         pointRadius: 4,
-        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+        pointBackgroundColor: 'pink',
       },
     ],
   };
@@ -72,7 +72,7 @@ export default function Chart({ moodLogs }) {
   return (
     <div className="card bg-base-100 w-full shadow-sm p-4">
       <h2 className="card-title text-center mb-4">Mood Trends</h2>
-      <div style={{ width: '80%', height: '300px', margin: '0 auto' }}>
+      <div style={{ width: '80%', height: '250px', margin: '110px auto' }}>
         <Line data={data} options={options} />
       </div>
     </div>

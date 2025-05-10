@@ -1,6 +1,4 @@
 // serves as the main page before a user signs in
-import Footer from "../components/Footer"
-
 
 export default function Home() {
   return (
@@ -15,11 +13,10 @@ export default function Home() {
             <div className="max-w-md">
               <h1 className="mb-5 text-5xl font-bold">Welcome to VibeCheck!</h1>
               <button className="btn btn-primary"><a href="/login">Login</a></button>
-              <button className="btn btn-info secondary ml-5"><a href="/register">Register</a></button>
+              <button className="btn btn-primary ml-5"><a href="/register">Register</a></button>
             </div>
           </div>
         </div>
-      <Footer />
     </>
   )
 }

@@ -1,7 +1,6 @@
 // Displays paginated list of previous mood entries with search and filter options
 import React, { useState, useEffect } from 'react'
 import NavBar from '../components/NavBar'
-import Footer from '../components/Footer'
 import MoodLogItem from '../components/MoodLogItem'
 
 export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
@@ -53,9 +52,9 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
     <>
       <NavBar />
       <div className='place-items-center'>
-        <div className='grow text-2xl'>List of Mood Logs</div>
+        <div className='grow text-2xl pt-10'>List of Mood Logs</div>
         {loading ? (
-          <p>Loading mood logs...</p>
+          <p className='grow text-2l pt-10'>Loading mood logs...</p>
         ) : (
           <MoodLogItem
             mood_logs={currentMoodLogs}
@@ -70,7 +69,7 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
           />
         )}
         {/* Pagination */}
-        <div className="join">
+        <div className="join mt-10">
           <button
             className="join-item btn"
             onClick={() => handlePageChange(currentPage - 1)}
@@ -91,7 +90,6 @@ export default function MoodLogsList({ mood_logs: initialMoodLogs }) {
         </div>
         {/* End of Pagination */}
         </div>
-      <Footer />
     </>
   )
 }

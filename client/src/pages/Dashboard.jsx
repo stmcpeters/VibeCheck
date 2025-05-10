@@ -1,7 +1,6 @@
 // Landing page after login. Displays current mood prompt, mood streaks, and Tableau chart
 import React, { useState, useEffect } from "react"
 import NavBar from "../components/NavBar"
-import Footer from "../components/Footer"
 import MoodForm from "../components/MoodForm"
 import SearchBar from "../components/SearchBar"
 import Chart from "../components/Chart"
@@ -13,7 +12,7 @@ export default function Dashboard({ userId, mood_logs, articles }) {
   const [loadingMoodLogs, setLoadingMoodLogs] = useState(true);
 
   // creates variable to hold the 2 most recent mood logs to be displayed on the dashboard
-  const sortedMoodLogs = mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,2);
+  const sortedMoodLogs = mood_logs.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,3);
 
   // creates variable to hold the 2 articles to be displayed on the dashboard
   const featuredArticles = articles.slice(0,3);
@@ -40,7 +39,7 @@ export default function Dashboard({ userId, mood_logs, articles }) {
       <hr />
       <br /> */}
       <div className="flex w-full">
-        <div className="card rounded-box grid h-100 grow place-items-center">
+        <div className="card rounded-box grid h-80 grow place-items-center pt-10">
           <Chart moodLogs={mood_logs}/>
         </div>
         <div className="divider divider-horizontal"></div>
@@ -68,7 +67,6 @@ export default function Dashboard({ userId, mood_logs, articles }) {
           }
         </div>
       </div>
-      <Footer />
     </>
   )
 }
