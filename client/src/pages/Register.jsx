@@ -75,7 +75,7 @@ export default function Register() {
               </svg>
               Login with Google
             </button> */}
-            <p>Already have an account? <a href='/login'>Click here to login</a></p>
+            <p>Already have an account? <a href='/login' style={{ color: "blue"}}>Login</a></p>
           </div>
         </div>
       </div>

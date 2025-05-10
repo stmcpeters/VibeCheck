@@ -79,7 +79,7 @@ export default function UserAuth() {
               </svg>
               Login with Google
             </button> */}
-            <p>Don't have an account? <a href='/register'>Click here to register</a></p>
+            <p>Don't have an account? <a href='/register' style={{ color: "blue"}}>Register</a></p>
           </div>
         </div>
       </div>
