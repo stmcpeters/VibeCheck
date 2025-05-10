@@ -71,7 +71,7 @@ export default function Chart({ moodLogs }) {
 
   return (
     <div className="card bg-base-100 w-full shadow-sm p-4">
-      <h2 className="card-title text-center mb-4">Sentiment Trends</h2>
+      <h2 className="card-title text-center mb-4">Mood Trends</h2>
       <div style={{ width: '80%', height: '300px', margin: '0 auto' }}>
         <Line data={data} options={options} />
       </div>
