@@ -40,7 +40,7 @@ function NavBar() {
           <a className="btn btn-ghost text-xl">VibeCheck</a>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
+          <ul className="menu menu-horizontal px-1 text-lg">
             <li>
               <a href='/dashboard'>Dashboard</a>
             </li>
