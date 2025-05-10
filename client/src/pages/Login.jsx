@@ -44,7 +44,7 @@ export default function UserAuth() {
               <label className="fieldset-label">Password</label>
               <input type="password" className="input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
 
-              <button type="submit" className="btn btn-neutral mt-4" onClick={handleLogin}>Login</button>
+              <button type="submit" className="btn btn-primary mt-4" onClick={handleLogin}>Login</button>
               {error && <p className="text-red-500">{error}</p>}
             </fieldset>
             {/* Google
