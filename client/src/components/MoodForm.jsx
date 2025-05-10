@@ -42,11 +42,9 @@ export default function MoodForm({ userId, onSuccess }) {
     <>
       <div className="card bg-primary text-primary-content w-96">
         <div className="card-body">
-          <h2 className="card-title">Create a new mood log!</h2>
+          <h2 className="card-title">How are you feeling today?</h2>
           <form onSubmit={handleSubmit}>
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-              {/* <legend className="fieldset-legend">How are you feeling today?</legend> */}
-              <label className="label">How are you feeling today?</label>
               <div className="join heading">
                 <button
                 type="button"
@@ -78,7 +76,6 @@ export default function MoodForm({ userId, onSuccess }) {
                 value={journalEntry}
                 onChange={(e) => setJournalEntry(e.target.value)}
               ></textarea>
-              <div className="label">Optional</div>
             </fieldset>
             <div className="heading">
               <button type="reset" className="btn btn-block m-2.5 btn-info" onClick={() => setJournalEntry('')}>
