@@ -48,7 +48,7 @@ export default function UserAuth() {
               <button type="submit" className="btn btn-neutral mt-4" onClick={handleLogin}>Login</button>
               {error && <p className="text-red-500">{error}</p>}
             </fieldset>
-            {/* Google */}
+            {/* Google
             <button className="btn bg-white text-black border-[#e5e5e5]">
               <svg
                 aria-label="Google logo"
@@ -78,8 +78,8 @@ export default function UserAuth() {
                 </g>
               </svg>
               Login with Google
-            </button>
-            <p>Don't have an account? <a href='/register'>Register here</a></p>
+            </button> */}
+            <p>Don't have an account? <a href='/register'>Click here to register</a></p>
           </div>
         </div>
       </div>

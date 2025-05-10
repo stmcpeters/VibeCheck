@@ -44,7 +44,7 @@ export default function Register() {
               {error && <p className="text-red-500">{error}</p>}
               {message && <p className="text-green-500">{message}</p>}
             </fieldset>
-            {/* Google */}
+            {/* Google
             <button className="btn bg-white text-black border-[#e5e5e5]">
               <svg
                 aria-label="Google logo"
@@ -74,8 +74,8 @@ export default function Register() {
                 </g>
               </svg>
               Login with Google
-            </button>
-            <p>Already have an account? <a href='/login'>Log In</a></p>
+            </button> */}
+            <p>Already have an account? <a href='/login'>Click here to login</a></p>
           </div>
         </div>
       </div>
